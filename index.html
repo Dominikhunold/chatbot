@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -329,75 +328,73 @@ function showContactForm() {
   wrapper.style.maxWidth = "100%";
   wrapper.style.width = "100%";
   wrapper.innerHTML = "<div class=\"contact-form\" id=\"contact-form-inner\"><div class=\"cf-title\">Kontaktanfrage</div><div class=\"cf-row\"><label>Name</label><input type=\"text\" id=\"cf-name\" placeholder=\"Ihr Name\"></div><div class=\"cf-row\"><label>Telefon</label><input type=\"tel\" id=\"cf-tel\" placeholder=\"Ihre Telefonnummer\"></div><div class=\"cf-row\"><label>E-Mail</label><input type=\"email\" id=\"cf-email\" placeholder=\"Ihre E-Mail\"></div><div class=\"cf-row\"><label>Anliegen</label><textarea id=\"cf-msg\" rows=\"2\" placeholder=\"Kurze Beschreibung\"></textarea></div><button class=\"submit-btn\" id=\"cf-submit\" onclick=\"submitContact(this)\">Absenden</button></div>";
-
-c.appendChild(wrapper);
-scrollBottom();
+  c.appendChild(wrapper);
+  scrollBottom();
 }
 
 function submitContact(btn) {
-var name = document.getElementById(“cf-name”).value.trim();
-var tel = document.getElementById(“cf-tel”).value.trim();
-var email = document.getElementById(“cf-email”).value.trim();
-var msg = document.getElementById(“cf-msg”).value.trim();
+  var name = document.getElementById("cf-name").value.trim();
+  var tel = document.getElementById("cf-tel").value.trim();
+  var email = document.getElementById("cf-email").value.trim();
+  var msg = document.getElementById("cf-msg").value.trim();
 
-if (!name || (!tel && !email)) {
-btn.textContent = “Bitte Name und Kontakt ausfuellen”;
-setTimeout(function() { btn.textContent = “Absenden”; }, 2000);
-return;
-}
+  if (!name || (!tel && !email)) {
+    btn.textContent = "Bitte Name und Kontakt ausfuellen";
+    setTimeout(function() { btn.textContent = "Absenden"; }, 2000);
+    return;
+  }
 
-btn.textContent = “Wird gesendet…”;
-btn.disabled = true;
+  btn.textContent = "Wird gesendet...";
+  btn.disabled = true;
 
-fetch(FORMSPREE_URL, {
-method: “POST”,
-headers: { “Content-Type”: “application/json”, “Accept”: “application/json” },
-body: JSON.stringify({
-name: name,
-telefon: tel,
-email: email,
-anliegen: msg
-})
-})
-.then(function(resp) { return resp.json(); })
-.then(function(data) {
-document.getElementById(“contact-form-inner”).innerHTML = “<div style="text-align:center;padding:10px 0"><div style="font-size:22px;margin-bottom:8px;color:#52B788">✓</div><div style="font-size:13px;font-weight:500;color:#1A1A1A">Vielen Dank, “ + name + “!</div><div style="font-size:12px;color:#8A8A85;margin-top:4px">Wir melden uns so schnell wie moeglich bei Ihnen.</div></div>”;
-scrollBottom();
-})
-.catch(function() {
-btn.textContent = “Fehler - bitte erneut versuchen”;
-btn.disabled = false;
-});
+  fetch(FORMSPREE_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify({
+      name: name,
+      telefon: tel,
+      email: email,
+      anliegen: msg
+    })
+  })
+  .then(function(resp) { return resp.json(); })
+  .then(function(data) {
+    document.getElementById("contact-form-inner").innerHTML = "<div style=\"text-align:center;padding:10px 0\"><div style=\"font-size:22px;margin-bottom:8px;color:#52B788\">&#10003;</div><div style=\"font-size:13px;font-weight:500;color:#1A1A1A\">Vielen Dank, " + name + "!</div><div style=\"font-size:12px;color:#8A8A85;margin-top:4px\">Wir melden uns so schnell wie moeglich bei Ihnen.</div></div>";
+    scrollBottom();
+  })
+  .catch(function() {
+    btn.textContent = "Fehler - bitte erneut versuchen";
+    btn.disabled = false;
+  });
 }
 
 function sendMessage() {
-var input = document.getElementById(“user-input”);
-var text = input.value.trim();
-if (!text) return;
-addUserMessage(text);
-input.value = “”;
-input.style.height = “auto”;
-askAI(text);
+  var input = document.getElementById("user-input");
+  var text = input.value.trim();
+  if (!text) return;
+  addUserMessage(text);
+  input.value = "";
+  input.style.height = "auto";
+  askAI(text);
 }
 
 function handleKey(e) {
-if (e.key === “Enter” && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 }
 
 function autoResize(el) {
-el.style.height = “auto”;
-el.style.height = Math.min(el.scrollHeight, 80) + “px”;
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 80) + "px";
 }
 
 function scrollBottom() {
-var c = document.getElementById(“chat-messages”);
-setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
+  var c = document.getElementById("chat-messages");
+  setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
 }
 
 function getTime() {
-return new Date().toLocaleTimeString(“de-DE”, { hour: “2-digit”, minute: “2-digit” });
+  return new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
 }
 </script>
-
 </body>
 </html>
