@@ -1,5 +1,4 @@
-<!DOCTYPE html>?
-
+<!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -310,55 +309,55 @@ Regeln:
         <div class="cf-row"><label>Name</label><input type="text" id="cf-name" placeholder="Ihr Name" autocomplete="name"></div>
         <div class="cf-row"><label>Telefon oder E-Mail</label><input type="text" id="cf-contact" placeholder="Kontakt" autocomplete="email"></div>
         <div class="cf-row"><label>Anliegen</label><textarea id="cf-msg" rows="2" placeholder="Kurze Beschreibung …"></textarea></div>
+        <button class="submit-btn" onclick="submitContact(this)">Absenden</button>
+      </div>`;
+    c.appendChild(wrapper); scrollBottom();
+  }
 
-```
-    <button class="submit-btn" onclick="submitContact(this)">Absenden</button>
-  </div>`;
-c.appendChild(wrapper); scrollBottom();
-```
+  function submitContact(btn) {
+    const name    = document.getElementById('cf-name').value.trim();
+    const contact = document.getElementById('cf-contact').value.trim();
+    const msg     = document.getElementById('cf-msg').value.trim();
+    if (!name || !contact) {
+      btn.textContent = 'Bitte Name & Kontakt ausfüllen';
+      setTimeout(() => btn.textContent = 'Absenden', 2000); return;
+    }
+    const subject = encodeURIComponent(`Kontaktanfrage von ${name}`);
+    const body    = encodeURIComponent(`Name: ${name}\nKontakt: ${contact}\n\nAnliegen:\n${msg}`);
+    window.location.href = `mailto:${PRAXIS_EMAIL}?subject=${subject}&body=${body}`;
+    btn.closest('.contact-form').innerHTML = `
+      <div style="text-align:center;padding:10px 0;">
+        <div style="font-size:20px;margin-bottom:7px;color:#52B788">✓</div>
+        <div style="font-size:13px;font-weight:500;color:#1A1A1A;">Vielen Dank, ${name}</div>
+        <div style="font-size:12px;color:#8A8A85;margin-top:3px;font-weight:300;">Wir melden uns in Kürze.</div>
+      </div>`;
+    scrollBottom();
+  }
 
-}
+  function sendMessage() {
+    const input = document.getElementById('user-input');
+    const text = input.value.trim();
+    if (!text) return;
+    addUserMessage(text); input.value = ''; input.style.height = 'auto'; askAI(text);
+  }
 
-function submitContact(btn) {
-const name    = document.getElementById(‘cf-name’).value.trim();
-const contact = document.getElementById(‘cf-contact’).value.trim();
-const msg     = document.getElementById(‘cf-msg’).value.trim();
-if (!name || !contact) {
-btn.textContent = ‘Bitte Name & Kontakt ausfüllen’;
-setTimeout(() => btn.textContent = ‘Absenden’, 2000); return;
-}
-const subject = encodeURIComponent(`Kontaktanfrage von ${name}`);
-const body    = encodeURIComponent(`Name: ${name}\nKontakt: ${contact}\n\nAnliegen:\n${msg}`);
-window.location.href = `mailto:${PRAXIS_EMAIL}?subject=${subject}&body=${body}`;
-btn.closest(’.contact-form’).innerHTML = ` <div style="text-align:center;padding:10px 0;"> <div style="font-size:20px;margin-bottom:7px;color:#52B788">✓</div> <div style="font-size:13px;font-weight:500;color:#1A1A1A;">Vielen Dank, ${name}</div> <div style="font-size:12px;color:#8A8A85;margin-top:3px;font-weight:300;">Wir melden uns in Kürze.</div> </div>`;
-scrollBottom();
-}
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
 
-function sendMessage() {
-const input = document.getElementById(‘user-input’);
-const text = input.value.trim();
-if (!text) return;
-addUserMessage(text); input.value = ‘’; input.style.height = ‘auto’; askAI(text);
-}
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+  }
 
-function handleKey(e) {
-if (e.key === ‘Enter’ && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-}
+  function scrollBottom() {
+    const c = document.getElementById('chat-messages');
+    setTimeout(() => c.scrollTop = c.scrollHeight, 50);
+  }
 
-function autoResize(el) {
-el.style.height = ‘auto’;
-el.style.height = Math.min(el.scrollHeight, 80) + ‘px’;
-}
-
-function scrollBottom() {
-const c = document.getElementById(‘chat-messages’);
-setTimeout(() => c.scrollTop = c.scrollHeight, 50);
-}
-
-function now() {
-return new Date().toLocaleTimeString(‘de-DE’, { hour: ‘2-digit’, minute: ‘2-digit’ });
-}
+  function now() {
+    return new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+  }
 </script>
-
 </body>
 </html>
