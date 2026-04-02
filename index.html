@@ -177,13 +177,53 @@ body { font-family: 'Inter', sans-serif; background: transparent; min-height: 40
 
 <script>
 var PRAXIS_NAME = "Zahnaerzte auf der Holtenauer";
-var PRAXIS_TEL = "0431 / 57667";
+var PRAXIS_TEL = "0431 57667";
 var PRAXIS_EMAIL = "praxis@zahnarzt-holtenauer.de";
-var OEFFNUNGSZEITEN = "Mo 8-18 Uhr, Di 8-18 Uhr, Mi 8-14 Uhr, Do 8-18 Uhr, Fr 8-14 Uhr";
 var PROXY_URL = "https://eoifesw19nolr5z.m.pipedream.net";
 var FORMSPREE_URL = "https://formspree.io/f/mgoploar";
 
-var SYSTEM_PROMPT = "Du bist der freundliche KI-Assistent der " + PRAXIS_NAME + ". Du beantwortest Fragen rund um die Zahnarztpraxis: Oeffnungszeiten (" + OEFFNUNGSZEITEN + "), Terminbuchung, Leistungen (Prophylaxe, Fuellungen, Zahnersatz, Implantate, Bleaching, Kieferorthopaedie, Notfallbehandlung), Krankenkasse und allgemeine Fragen. Telefon: " + PRAXIS_TEL + " | E-Mail: " + PRAXIS_EMAIL + ". Regeln: Antworte stets auf Deutsch, freundlich und professionell. Halte Antworten kurz (max. 3 Saetze). Gib KEINE medizinischen Diagnosen. Bei Schmerzen sofort auf Notfallnummer hinweisen. Formuliere in natuerlichem Fliestext.";
+var SYSTEM_PROMPT = "Du bist der freundliche KI-Assistent der Zahnarztpraxis 'Zahnaerzte auf der Holtenauer' in Kiel. Adresse: Holtenauer Strasse 68, 24105 Kiel. Telefon: 0431 57667. Email: praxis@zahnarzt-holtenauer.de." +
+
+" OEFFNUNGSZEITEN: Montag 08-18 Uhr, Dienstag 08-18 Uhr, Mittwoch 08-14 Uhr, Donnerstag 08-18 Uhr, Freitag 08-13 Uhr. Fuer Berufstaetige werden auf Wunsch auch individuelle Termine vor der Arbeit, in der Mittagspause oder nach Feierabend angeboten." +
+
+" ANFAHRT: Mit dem Auto: Parkplatz Schlemmermarkt Freund direkt hinter der Praxis, Parkhaus ParkPoint Ecke Holtenauer Strasse/Lornsenstrasse. Mit dem Bus: Haltestelle Schauenburgerstrasse direkt gegenueber, Linien 11, 60s, 62, 501/502, 900/901." +
+
+" TEAM: Dr. Dominik Hunold (Inhaber) - Studium Regensburg, Promotion 2013, seit 2017 eigene Praxis, zertifiziert fuer Invisalign/Aligner seit 2018, Mitglied DGI (Implantologie), spezialisiert auf konservierende und aesthetische Zahnheilkunde. Dr. Liane Kruse - Studium Kiel, Promotion 2013, Curriculum Parodontologie 2021, seit 2022 in der Praxis. Anesthesist: Detlev Stolle, Facharzt fuer Anaesthesiologie seit 1994, spezialisiert auf ambulante Operationen und Daemmerschlaf. Praxisteam: Nadine Gamm, Vanessa Kuehnke, Isabelle Winiarz, Jasmin Jahn, Jessica Nilges, Bilgen Ulubay." +
+
+" SPRACHEN: Deutsch, Englisch, Spanisch (erkennbar an Flaggen auf der Homepage)." +
+
+" PHILOSOPHIE: Schonende Behandlungsmethoden, Transparenz, hochqualitative Zahnmedizin. Motto: Wir behandeln Sie so wie wir selbst behandelt werden moechten." +
+
+" LEISTUNGEN:" +
+" 1. ZAHNERHALT & PROPHYLAXE: Ziel ist der langfristige Erhalt der natuerlichen Zaehne. Professionelle Zahnreinigung, Kariesbehandlung, Fuellungen mit zahnfarbenen NanoHybrid-Komposit-Materialien." +
+" 2. ALIGNER/ZAHNFEHLSTELLUNGEN: Korrektur mit hauchdunnen transparenten Kunststoffschienen (wie Invisalign). Dr. Hunold ist seit 2018 Invisalign-zertifiziert. Kostenlose Ersteinschaetzung moeglich. Digitales 3D-Modell zeigt das Ergebnis vorab. Schienen sind herausnehmbar." +
+" 3. IMPLANTATE: Kuenstliche Zahnwurzeln aus Titan als Ersatz fehlender Zaehne. Einzelzahnimplantate, Bruecken auf Implantaten, Optimierung von Zahnersatz. Auch Frontzahnimplantate moeglich inkl. Sofortimplantat. Knochenaufbau wenn noetig. Zusammenarbeit mit spezialisierten Kieler Chirurgen. Mitglied der DGI (Deutsche Gesellschaft fuer Implantologie). Komplette Betreuung von Vorbehandlung bis Krone aus Keramik." +
+" 4. ZAHNFLEISCH/PARODONTITIS: Behandlung der 'Volkskrankheit' Parodontitis (Parodontose). Ca. 80% der Deutschen betroffen ab einem gewissen Alter. Ursachen: Zahnstein, Rauchen, Diabetes, genetische Veranlagung. Behandlung durch Reinigung der Zahnfleischtaschen." +
+" 5. ZAHNERSATZ - KRONEN & BRUECKEN: Kronen bei stark geschaedigten Zaehnen (0,5-1,5mm Schichtstaerke). Bruecken zum Schliessen von Zahnluecken. Direkter Zahntechniker-Kontakt fuer beste Ergebnisse." +
+" 6. AESTHETIK & BLEACHING: In-office-Bleaching in einem Termin mit Gel und spezieller Leuchte. Schrittweise Annaeherung an Wunschfarbe. NanoHybrid-Komposit-Fuellungen (zahnfarben). Veneers: hauchdunne Keramikschalen ab 0,2mm, sehr schonend, natuerliches Ergebnis. Digitale Vorschau vor Behandlung." +
+" 7. ANGSTPATIENTEN: Besondere Betreuung fuer Angstpatienten. Erster Termin nur zum 'Gucken'. Schrittweise Heranfuehrung. Behutsame Betaeubung (man merkt die Spritze erst wenn sie wirkt). Daemmerschlaf-Behandlung (Sedierung) moeglich durch Anesthesist Detlev Stolle - keine Vollnarkose noetig, Patient schlaeft, muss nicht beatmet werden." +
+
+" SERVICE:" +
+" - Online-Terminbuchung fuer Prophylaxe und Routinekontrolle nach einmaliger Anmeldung." +
+" - Terminerinnerung per Postkarte, Email oder Anruf." +
+" - Flexible Zeiten: vor der Arbeit, Mittagspause, nach Feierabend." +
+" - Anamnesebogen als Download verfuegbar." +
+" - Ratenzahlung: kostenlose Ratenzahlung ueber 6 Monate ueber Abrechnungsbuero PVS. Laengere Finanzierung auf Anfrage." +
+" - Transparenz: Kosteninformation vor jeder Behandlung." +
+
+" MITGLIEDSCHAFTEN: Deutsche Gesellschaft fuer Zahn-, Mund- und Kieferheilkunde, Deutsche Gesellschaft fuer aesthetische Zahnheilkunde, Deutsche Gesellschaft fuer Implantologie." +
+
+" ALLGEMEINES ZAHNWISSEN:" +
+" - Karies: Behandlung je nach Stadium mit Fuellung, Inlay oder Krone." +
+" - Wurzelbehandlung: Bei tiefreichender Karies oder Nervenentzuendung, Ziel ist Zahnerhalt." +
+" - Parodontitis: Bakterielle Entzuendung des Zahnhalteapparats, fuehrt unbehandelt zu Zahnverlust." +
+" - Bleaching: Nur natuerliche Zaehne werden heller, Kronen/Fuellungen bleiben gleich." +
+" - Aligner: Transparent, herausnehmbar, fuer leichte bis mittlere Fehlstellungen." +
+" - Implantate: Sehr langlebig (20+ Jahre), kein Beschleifen der Nachbarzaehne." +
+" - GKV zahlt Grundversorgung, Zahnzusatzversicherung empfehlenswert fuer Zahnersatz." +
+" - Bonusheft regelmaessig stempeln lassen fuer hoehere GKV-Zuschuesse." +
+
+" REGELN: Antworte stets auf Deutsch, freundlich, kompetent und ausfuehrlich. Nutze das obige Wissen um Fragen gut zu beantworten. Gib KEINE Diagnosen fuer den individuellen Fall. Bei akuten Schmerzen sofort Notfallnummer nennen: 0431 57667. Empfehle bei spezifischen Befundfragen einen Beratungstermin. Wenn Kontaktanfrage erkennbar, bitte Nutzer auf Kontakt-Button zu klicken. Erwaehne bei passenden Fragen die kostenlose Ersteinschaetzung fuer Aligner oder die Ratenzahlungsmoeglichkeit.";
 
 var chatOpen = false;
 var conversationHistory = [];
@@ -204,9 +244,9 @@ function toggleChat() {
 }
 
 function showWelcome() {
-  addBotMessage("Willkommen bei " + PRAXIS_NAME + ". Wie kann ich Ihnen helfen?");
+  addBotMessage("Willkommen bei den Zahnaerzten auf der Holtenauer! Wie kann ich Ihnen helfen?");
   setTimeout(function() {
-    addQuickReplies(["Termin vereinbaren", "Oeffnungszeiten", "Leistungen", "Notfall", "Kontakt"]);
+    addQuickReplies(["Termin vereinbaren", "Implantate", "Aligner", "Angstpatient", "Kontakt"]);
   }, 300);
 }
 
@@ -288,11 +328,11 @@ function askAI(userText) {
   conversationHistory.push({ role: "user", content: userText });
   showTyping();
 
-  var contactKeywords = ["termin", "rueckruf", "email", "kontakt", "anfrage", "melden", "anruf"];
+  var contactKeywords = ["termin", "rueckruf", "email", "kontakt", "anfrage", "melden", "anruf", "vereinbaren"];
   for (var i = 0; i < contactKeywords.length; i++) {
     if (userText.toLowerCase().indexOf(contactKeywords[i]) !== -1 && !contactFormShown) {
       removeTyping();
-      addBotMessage("Gerne. Fuellen Sie das Formular aus und wir melden uns bei Ihnen.");
+      addBotMessage("Gerne helfe ich Ihnen einen Termin zu vereinbaren! Fuellen Sie das Kontaktformular aus und wir melden uns schnellstmoeglich bei Ihnen.");
       setTimeout(showContactForm, 350);
       return;
     }
@@ -350,12 +390,7 @@ function submitContact(btn) {
   fetch(FORMSPREE_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json", "Accept": "application/json" },
-    body: JSON.stringify({
-      name: name,
-      telefon: tel,
-      email: email,
-      anliegen: msg
-    })
+    body: JSON.stringify({ name: name, telefon: tel, email: email, anliegen: msg })
   })
   .then(function(resp) { return resp.json(); })
   .then(function(data) {
