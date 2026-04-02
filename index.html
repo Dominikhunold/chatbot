@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -110,6 +111,7 @@ body { font-family: 'Inter', sans-serif; background: transparent; min-height: 40
   font-size: 13px; font-weight: 500; cursor: pointer;
 }
 .submit-btn:hover { background: var(--accent2); }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
 .chat-input-bar {
   padding: 10px 12px; background: var(--white);
   border-top: 1px solid var(--border);
@@ -180,6 +182,7 @@ var PRAXIS_TEL = "0431 / 57667";
 var PRAXIS_EMAIL = "praxis@zahnarzt-holtenauer.de";
 var OEFFNUNGSZEITEN = "Mo 8-18 Uhr, Di 8-18 Uhr, Mi 8-14 Uhr, Do 8-18 Uhr, Fr 8-14 Uhr";
 var PROXY_URL = "https://eoifesw19nolr5z.m.pipedream.net";
+var FORMSPREE_URL = "https://formspree.io/f/mgoploar";
 
 var SYSTEM_PROMPT = "Du bist der freundliche KI-Assistent der " + PRAXIS_NAME + ". Du beantwortest Fragen rund um die Zahnarztpraxis: Oeffnungszeiten (" + OEFFNUNGSZEITEN + "), Terminbuchung, Leistungen (Prophylaxe, Fuellungen, Zahnersatz, Implantate, Bleaching, Kieferorthopaedie, Notfallbehandlung), Krankenkasse und allgemeine Fragen. Telefon: " + PRAXIS_TEL + " | E-Mail: " + PRAXIS_EMAIL + ". Regeln: Antworte stets auf Deutsch, freundlich und professionell. Halte Antworten kurz (max. 3 Saetze). Gib KEINE medizinischen Diagnosen. Bei Schmerzen sofort auf Notfallnummer hinweisen. Formuliere in natuerlichem Fliestext.";
 
@@ -325,54 +328,76 @@ function showContactForm() {
   wrapper.className = "msg bot";
   wrapper.style.maxWidth = "100%";
   wrapper.style.width = "100%";
-  wrapper.innerHTML = "<div class=\"contact-form\"><div class=\"cf-title\">Kontaktanfrage</div><div class=\"cf-row\"><label>Name</label><input type=\"text\" id=\"cf-name\" placeholder=\"Ihr Name\"></div><div class=\"cf-row\"><label>Telefon oder E-Mail</label><input type=\"text\" id=\"cf-contact\" placeholder=\"Kontakt\"></div><div class=\"cf-row\"><label>Anliegen</label><textarea id=\"cf-msg\" rows=\"2\" placeholder=\"Kurze Beschreibung\"></textarea></div><button class=\"submit-btn\" onclick=\"submitContact(this)\">Absenden</button></div>";
-  c.appendChild(wrapper);
-  scrollBottom();
+  wrapper.innerHTML = "<div class=\"contact-form\" id=\"contact-form-inner\"><div class=\"cf-title\">Kontaktanfrage</div><div class=\"cf-row\"><label>Name</label><input type=\"text\" id=\"cf-name\" placeholder=\"Ihr Name\"></div><div class=\"cf-row\"><label>Telefon</label><input type=\"tel\" id=\"cf-tel\" placeholder=\"Ihre Telefonnummer\"></div><div class=\"cf-row\"><label>E-Mail</label><input type=\"email\" id=\"cf-email\" placeholder=\"Ihre E-Mail\"></div><div class=\"cf-row\"><label>Anliegen</label><textarea id=\"cf-msg\" rows=\"2\" placeholder=\"Kurze Beschreibung\"></textarea></div><button class=\"submit-btn\" id=\"cf-submit\" onclick=\"submitContact(this)\">Absenden</button></div>";
+
+c.appendChild(wrapper);
+scrollBottom();
 }
 
 function submitContact(btn) {
-  var name = document.getElementById("cf-name").value.trim();
-  var contact = document.getElementById("cf-contact").value.trim();
-  var msg = document.getElementById("cf-msg").value.trim();
-  if (!name || !contact) {
-    btn.textContent = "Bitte Name und Kontakt ausfuellen";
-    setTimeout(function() { btn.textContent = "Absenden"; }, 2000);
-    return;
-  }
-  var subject = encodeURIComponent("Kontaktanfrage von " + name);
-  var body = encodeURIComponent("Name: " + name + "\nKontakt: " + contact + "\n\nAnliegen:\n" + msg);
-  window.location.href = "mailto:" + PRAXIS_EMAIL + "?subject=" + subject + "&body=" + body;
-  btn.closest(".contact-form").innerHTML = "<div style=\"text-align:center;padding:10px 0\"><div style=\"font-size:20px;margin-bottom:7px;color:#52B788\">&#10003;</div><div style=\"font-size:13px;font-weight:500\">Vielen Dank, " + name + "</div><div style=\"font-size:12px;color:#8A8A85;margin-top:3px\">Wir melden uns in Kuerze.</div></div>";
-  scrollBottom();
+var name = document.getElementById(“cf-name”).value.trim();
+var tel = document.getElementById(“cf-tel”).value.trim();
+var email = document.getElementById(“cf-email”).value.trim();
+var msg = document.getElementById(“cf-msg”).value.trim();
+
+if (!name || (!tel && !email)) {
+btn.textContent = “Bitte Name und Kontakt ausfuellen”;
+setTimeout(function() { btn.textContent = “Absenden”; }, 2000);
+return;
+}
+
+btn.textContent = “Wird gesendet…”;
+btn.disabled = true;
+
+fetch(FORMSPREE_URL, {
+method: “POST”,
+headers: { “Content-Type”: “application/json”, “Accept”: “application/json” },
+body: JSON.stringify({
+name: name,
+telefon: tel,
+email: email,
+anliegen: msg
+})
+})
+.then(function(resp) { return resp.json(); })
+.then(function(data) {
+document.getElementById(“contact-form-inner”).innerHTML = “<div style="text-align:center;padding:10px 0"><div style="font-size:22px;margin-bottom:8px;color:#52B788">✓</div><div style="font-size:13px;font-weight:500;color:#1A1A1A">Vielen Dank, “ + name + “!</div><div style="font-size:12px;color:#8A8A85;margin-top:4px">Wir melden uns so schnell wie moeglich bei Ihnen.</div></div>”;
+scrollBottom();
+})
+.catch(function() {
+btn.textContent = “Fehler - bitte erneut versuchen”;
+btn.disabled = false;
+});
 }
 
 function sendMessage() {
-  var input = document.getElementById("user-input");
-  var text = input.value.trim();
-  if (!text) return;
-  addUserMessage(text);
-  input.value = "";
-  input.style.height = "auto";
-  askAI(text);
+var input = document.getElementById(“user-input”);
+var text = input.value.trim();
+if (!text) return;
+addUserMessage(text);
+input.value = “”;
+input.style.height = “auto”;
+askAI(text);
 }
 
 function handleKey(e) {
-  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+if (e.key === “Enter” && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 }
 
 function autoResize(el) {
-  el.style.height = "auto";
-  el.style.height = Math.min(el.scrollHeight, 80) + "px";
+el.style.height = “auto”;
+el.style.height = Math.min(el.scrollHeight, 80) + “px”;
 }
 
 function scrollBottom() {
-  var c = document.getElementById("chat-messages");
-  setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
+var c = document.getElementById(“chat-messages”);
+setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
 }
 
 function getTime() {
-  return new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+return new Date().toLocaleTimeString(“de-DE”, { hour: “2-digit”, minute: “2-digit” });
 }
 </script>
+
 </body>
 </html>
