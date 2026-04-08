@@ -367,7 +367,7 @@ function showContactForm() {
   wrapper.className = "msg bot";
   wrapper.style.maxWidth = "100%";
   wrapper.style.width = "100%";
-  wrapper.innerHTML = "<div class=\"contact-form\" id=\"contact-form-inner\"><div class=\"cf-title\">Kontaktanfrage</div><div class=\"cf-row\"><label>Name</label><input type=\"text\" id=\"cf-name\" placeholder=\"Ihr Name\"></div><div class=\"cf-row\"><label>Telefon</label><input type=\"tel\" id=\"cf-tel\" placeholder=\"Ihre Telefonnummer\"></div><div class=\"cf-row\"><label>E-Mail</label><input type=\"email\" id=\"cf-email\" placeholder=\"Ihre E-Mail\"></div><div class=\"cf-row\"><label>Anliegen</label><textarea id=\"cf-msg\" rows=\"2\" placeholder=\"Kurze Beschreibung\"></textarea></div><button class=\"submit-btn\" id=\"cf-submit\" onclick=\"submitContact(this)\">Absenden</button></div>";
+  wrapper.innerHTML = "<div class=\"contact-form\" id=\"contact-form-inner\"><div class=\"cf-title\">Kontaktanfrage</div><div class=\"cf-row\"><label>Name</label><input type=\"text\" id=\"cf-name\" placeholder=\"Ihr Name\"></div><div class=\"cf-row\"><label>Telefon</label><input type=\"tel\" id=\"cf-tel\" placeholder=\"Ihre Telefonnummer\"></div><div class=\"cf-row\"><label>E-Mail</label><input type=\"email\" id=\"cf-email\" placeholder=\"Ihre E-Mail\"></div><div class=\"cf-row\"><label>Anliegen</label><textarea id=\"cf-msg\" rows=\"2\" placeholder=\"Kurze Beschreibung\"></textarea></div><div style=\"display:flex;gap:8px;align-items:flex-start;margin-top:4px\"><input type=\"checkbox\" id=\"cf-dsgvo\" style=\"margin-top:3px;flex-shrink:0;accent-color:#2D5954\"><label for=\"cf-dsgvo\" style=\"font-size:11px;color:#8A8A85;font-weight:300;text-transform:none;letter-spacing:0;line-height:1.5\">Ich stimme der Verarbeitung meiner Daten gemaess der <a href='https://www.zahnarzt-holtenauer.de/datenschutz' target='_blank' style='color:#2D5954'>Datenschutzerklaerung</a> zu.</label></div><button class=\"submit-btn\" id=\"cf-submit\" onclick=\"submitContact(this)\">Absenden</button></div>";
   c.appendChild(wrapper);
   scrollBottom();
 }
@@ -378,8 +378,14 @@ function submitContact(btn) {
   var email = document.getElementById("cf-email").value.trim();
   var msg = document.getElementById("cf-msg").value.trim();
 
+  var dsgvo = document.getElementById("cf-dsgvo").checked;
   if (!name || (!tel && !email)) {
     btn.textContent = "Bitte Name und Kontakt ausfuellen";
+    setTimeout(function() { btn.textContent = "Absenden"; }, 2000);
+    return;
+  }
+  if (!dsgvo) {
+    btn.textContent = "Bitte Datenschutz bestaetigen";
     setTimeout(function() { btn.textContent = "Absenden"; }, 2000);
     return;
   }
