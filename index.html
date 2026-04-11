@@ -104,7 +104,11 @@ body { font-family: 'Inter', sans-serif; background: transparent; min-height: 10
   display: flex; flex-direction: column; gap: 9px; width: 100%;
 }
 .cf-title { font-size: 13px; font-weight: 500; color: var(--text); }
-.contact-form label { font-size: 10.5px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 3px; }
+.contact-form label {
+  font-size: 10.5px; font-weight: 500; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  display: block; margin-bottom: 3px;
+}
 .contact-form input, .contact-form textarea {
   width: 100%; padding: 7px 10px; border: 1px solid var(--border);
   border-radius: 7px; font-family: 'Inter', sans-serif;
@@ -113,6 +117,22 @@ body { font-family: 'Inter', sans-serif; background: transparent; min-height: 10
 }
 .contact-form input:focus, .contact-form textarea:focus { border-color: var(--accent); }
 .cf-row { display: flex; flex-direction: column; }
+.dsgvo-row {
+  display: flex; gap: 8px; align-items: flex-start; margin-top: 2px;
+}
+.dsgvo-row input[type="checkbox"] {
+  width: auto; flex-shrink: 0; margin-top: 2px; accent-color: #2D5954;
+}
+.dsgvo-label {
+  font-size: 11px !important;
+  font-weight: 300 !important;
+  color: #8A8A85 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  line-height: 1.5 !important;
+  display: block !important;
+  margin-bottom: 0 !important;
+}
 .submit-btn {
   background: var(--accent); color: white; border: none;
   padding: 8px; border-radius: 7px; font-family: 'Inter', sans-serif;
@@ -339,11 +359,10 @@ function showContactForm() {
     '<div class="cf-row"><label>Telefon</label><input type="tel" id="cf-tel" placeholder="Ihre Telefonnummer"></div>' +
     '<div class="cf-row"><label>E-Mail</label><input type="email" id="cf-email" placeholder="Ihre E-Mail"></div>' +
     '<div class="cf-row"><label>Anliegen</label><textarea id="cf-msg" rows="2" placeholder="Kurze Beschreibung"></textarea></div>' +
-    '<div style="margin-top:4px;line-height:1.6">' +
-    '<input type="checkbox" id="cf-dsgvo" style="margin-right:6px;accent-color:#2D5954;vertical-align:top;margin-top:3px">' +
-    '<label for="cf-dsgvo" style="font-size:11px;color:#8A8A85;font-weight:300;text-transform:none;letter-spacing:0;line-height:1.5;display:inline">' +
-    'Ich stimme der Verarbeitung meiner Daten gem&auml;&szlig; der <a href="https://www.zahnarzt-holtenauer.de/datenschutz" target="_blank" style="color:#2D5954">Datenschutzerkl&auml;rung</a> zu.' +
-    '</label></div>' +
+    '<div class="dsgvo-row">' +
+    '<input type="checkbox" id="cf-dsgvo">' +
+    '<label for="cf-dsgvo" class="dsgvo-label">Ich stimme der Verarbeitung meiner Daten gem&auml;&szlig; der <a href="https://www.zahnarzt-holtenauer.de/datenschutz" target="_blank" style="color:#2D5954">Datenschutzerkl&auml;rung</a> zu.</label>' +
+    '</div>' +
     '<button class="submit-btn" id="cf-submit">Absenden</button>';
   wrapper.appendChild(form);
   c.appendChild(wrapper);
