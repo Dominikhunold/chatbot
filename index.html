@@ -145,10 +145,10 @@ body { font-family: 'Inter', sans-serif; background: transparent; min-height: 10
 @media (max-width: 480px) {
   #chat-window {
     position: fixed;
-    width: 100%; left: 0; right: 0; bottom: 0;
-    max-height: 80vh; border-radius: 16px 16px 0 0;
+    width: calc(100% - 32px); left: 16px; right: 16px; bottom: 16px;
+    max-height: 80vh; border-radius: 16px;
   }
-  #chat-trigger { right: 16px; bottom: 16px; }
+  #chat-trigger { right: 16px; bottom: 90px; }
 }
 </style>
 </head>
