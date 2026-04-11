@@ -35,3 +35,391 @@ body { font-family: 'Inter', sans-serif; background: transparent; min-height: 10
   position: fixed; bottom: 92px;
   left: 50%; transform: translateX(-50%) translateY(12px);
   width: min(360px, calc(100% - 32px));
+  max-height: 560px;
+  background: var(--white); border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+  display: flex; flex-direction: column; overflow: hidden;
+  z-index: 9999; opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+#chat-window.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: all;
+}
+.chat-header {
+  padding: 14px 16px; background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 11px; flex-shrink: 0;
+}
+.header-icon {
+  width: 34px; height: 34px; background: var(--bg);
+  border-radius: 9px; display: flex; align-items: center;
+  justify-content: center; font-size: 17px; flex-shrink: 0;
+}
+.header-text h3 { font-size: 13.5px; font-weight: 500; color: var(--text); }
+.header-text p { font-size: 11.5px; color: var(--muted); margin-top: 1px; font-weight: 300; }
+.status-dot {
+  display: inline-block; width: 6px; height: 6px;
+  background: #52B788; border-radius: 50%;
+  margin-right: 4px; vertical-align: middle;
+}
+.header-close {
+  margin-left: auto; background: none; border: none;
+  cursor: pointer; color: var(--muted); padding: 5px;
+  border-radius: 7px; display: flex; flex-shrink: 0;
+}
+.header-close:hover { background: var(--bg); }
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 14px;
+  display: flex; flex-direction: column; gap: 9px;
+  background: var(--bg); min-height: 0;
+}
+.msg { display: flex; flex-direction: column; max-width: 82%; }
+.msg.bot { align-self: flex-start; }
+.msg.user { align-self: flex-end; }
+.bubble { padding: 9px 13px; border-radius: 11px; font-size: 13.5px; line-height: 1.5; font-weight: 300; }
+.msg.bot .bubble { background: var(--white); color: var(--text); border: 1px solid var(--border); border-bottom-left-radius: 3px; }
+.msg.user .bubble { background: var(--accent); color: white; font-weight: 400; border-bottom-right-radius: 3px; }
+.msg-time { font-size: 10px; color: var(--light); margin-top: 3px; font-weight: 300; }
+.msg.user .msg-time { text-align: right; }
+.typing-dots { display: flex; gap: 3px; align-items: center; padding: 2px 0; }
+.typing-dots span { width: 5px; height: 5px; background: var(--light); border-radius: 50%; animation: dot 1.2s ease-in-out infinite; }
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes dot { 0%,80%,100% { transform: scale(0.7); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+.quick-replies { display: flex; flex-wrap: wrap; gap: 5px; }
+.qr-btn {
+  background: var(--white); border: 1px solid var(--border);
+  color: var(--text); padding: 5px 11px; border-radius: 7px;
+  font-size: 12px; font-family: 'Inter', sans-serif;
+  cursor: pointer; transition: all 0.14s;
+}
+.qr-btn:hover { background: var(--accent); border-color: var(--accent); color: white; }
+.contact-form {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 11px; padding: 13px;
+  display: flex; flex-direction: column; gap: 9px; width: 100%;
+}
+.cf-title { font-size: 13px; font-weight: 500; color: var(--text); }
+.contact-form label { font-size: 10.5px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; display: block; margin-bottom: 3px; }
+.contact-form input, .contact-form textarea {
+  width: 100%; padding: 7px 10px; border: 1px solid var(--border);
+  border-radius: 7px; font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 300; color: var(--text);
+  background: var(--bg); outline: none; resize: none;
+}
+.contact-form input:focus, .contact-form textarea:focus { border-color: var(--accent); }
+.cf-row { display: flex; flex-direction: column; }
+.submit-btn {
+  background: var(--accent); color: white; border: none;
+  padding: 8px; border-radius: 7px; font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 500; cursor: pointer;
+}
+.submit-btn:hover { background: var(--accent2); }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.chat-input-bar {
+  padding: 10px 12px; background: var(--white);
+  border-top: 1px solid var(--border);
+  display: flex; gap: 7px; align-items: flex-end;
+  flex-shrink: 0; width: 100%;
+}
+#user-input {
+  flex: 1; min-width: 0; padding: 8px 11px; border: 1px solid var(--border);
+  border-radius: 9px; font-family: 'Inter', sans-serif;
+  font-size: 16px; font-weight: 300; color: var(--text);
+  background: var(--bg); outline: none;
+  resize: none; max-height: 80px; overflow-y: auto; line-height: 1.45;
+}
+#user-input:focus { border-color: var(--accent); }
+#user-input::placeholder { color: var(--light); }
+#send-btn {
+  width: 34px; height: 34px; min-width: 34px; background: var(--accent);
+  border: none; border-radius: 9px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+#send-btn:hover { background: var(--accent2); }
+.chat-disclaimer {
+  text-align: center; font-size: 10px; color: var(--light);
+  padding: 4px 12px 7px; background: var(--white); font-weight: 300; flex-shrink: 0;
+}
+</style>
+</head>
+<body>
+
+<button id="chat-trigger" onclick="toggleChat()" aria-label="Assistent">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+</button>
+
+<div id="chat-window">
+  <div class="chat-header">
+    <div class="header-icon">&#x1F9B7;</div>
+    <div class="header-text">
+      <h3>Praxis-Assistent</h3>
+      <p><span class="status-dot"></span>Online</p>
+    </div>
+    <button class="header-close" onclick="toggleChat()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input-bar">
+    <textarea id="user-input" rows="1" placeholder="Nachricht ..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+    <button id="send-btn" onclick="sendMessage()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+  <div class="chat-disclaimer">KI-Assistent &middot; kein Ersatz f&uuml;r &auml;rztliche Beratung &middot; <a href="https://www.zahnarzt-holtenauer.de/datenschutz" target="_blank" style="color:var(--muted);text-decoration:underline;">Datenschutz</a></div>
+</div>
+
+<script>
+var PRAXIS_TEL = "0431 57667";
+var PROXY_URL = "https://eoifesw19nolr5z.m.pipedream.net";
+var FORMSPREE_URL = "https://formspree.io/f/mgoploar";
+
+var SYSTEM_PROMPT = "Du bist der freundliche KI-Assistent der Zahnarztpraxis 'Zahn\u00e4rzte auf der Holtenauer' in Kiel. Adresse: Holtenauer Stra\u00dfe 68, 24105 Kiel. Telefon: 0431 57667. Email: praxis@zahnarzt-holtenauer.de. \u00d6ffnungszeiten: Montag 08-18 Uhr, Dienstag 08-18 Uhr, Mittwoch 08-14 Uhr, Donnerstag 08-18 Uhr, Freitag 08-13 Uhr. F\u00fcr Berufst\u00e4tige werden auf Wunsch auch individuelle Termine vor der Arbeit, in der Mittagspause oder nach Feierabend angeboten. Anfahrt: Mit dem Auto: Parkplatz Schlemmermarkt Freund direkt hinter der Praxis, Parkhaus ParkPoint Ecke Holtenauer Stra\u00dfe/Lornsenstra\u00dfe. Mit dem Bus: Haltestelle Schauenburgerstra\u00dfe direkt gegen\u00fcber, Linien 11, 60s, 62, 501/502, 900/901. Team: Dr. Dominik Hunold (Inhaber), Dr. Liane Kruse, An\u00e4sthesist Detlev Stolle. Praxisteam: Nadine Gamm, Vanessa K\u00fchnke, Isabelle Winiarz, Jasmin Jahn, Jessica Nilges, Bilgen Ulubay. Sprachen: Deutsch, Englisch, Spanisch. Leistungen: Zahnerhalt und Prophylaxe, Aligner/Invisalign (kostenlose Ersteinsch\u00e4tzung m\u00f6glich), Implantate, Parodontitis-Behandlung, Kronen und Br\u00fccken, Bleaching, Veneers, Angstpatienten-Betreuung mit D\u00e4mmerschlaf-Option. Service: Online-Terminbuchung, flexible Zeiten, Ratenzahlung \u00fcber PVS (kostenlos bis 6 Monate). Regeln: Antworte stets auf Deutsch, herzlich und kompetent. Maximal 3-4 S\u00e4tze in nat\u00fcrlichem Flie\u00dftext. Lade am Ende sanft zum Besuch ein. Keine Diagnosen. Bei akuten Schmerzen Notfallnummer: 0431 57667. Bei Begr\u00fc\u00dfung antworte IMMER mit: Willkommen bei den Zahn\u00e4rzten auf der Holtenauer! Sch\u00f6n, dass Sie da sind - wie kann ich Ihnen helfen?";
+
+var chatOpen = false;
+var conversationHistory = [];
+var contactFormShown = false;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  var win = document.getElementById("chat-window");
+  if (chatOpen) {
+    win.classList.add("visible");
+    if (document.getElementById("chat-messages").children.length === 0) {
+      setTimeout(showWelcome, 150);
+    }
+    setTimeout(function() { document.getElementById("user-input").focus(); }, 280);
+  } else {
+    win.classList.remove("visible");
+  }
+}
+
+function showWelcome() {
+  addBotMessage("Willkommen bei den Zahn\u00e4rzten auf der Holtenauer! Wie kann ich Ihnen helfen?");
+  setTimeout(function() {
+    addQuickReplies(["Termin vereinbaren", "Implantate", "Aligner", "Angstpatient", "Kontakt"]);
+  }, 300);
+}
+
+function addBotMessage(text) {
+  var c = document.getElementById("chat-messages");
+  var div = document.createElement("div");
+  div.className = "msg bot";
+  var b = document.createElement("div");
+  b.className = "bubble";
+  b.textContent = text;
+  var t = document.createElement("div");
+  t.className = "msg-time";
+  t.textContent = getTime();
+  div.appendChild(b);
+  div.appendChild(t);
+  c.appendChild(div);
+  scrollBottom();
+  return div;
+}
+
+function addUserMessage(text) {
+  var c = document.getElementById("chat-messages");
+  var div = document.createElement("div");
+  div.className = "msg user";
+  var b = document.createElement("div");
+  b.className = "bubble";
+  b.textContent = text;
+  var t = document.createElement("div");
+  t.className = "msg-time";
+  t.textContent = getTime();
+  div.appendChild(b);
+  div.appendChild(t);
+  c.appendChild(div);
+  scrollBottom();
+}
+
+function addQuickReplies(options) {
+  var c = document.getElementById("chat-messages");
+  var div = document.createElement("div");
+  div.className = "quick-replies";
+  for (var i = 0; i < options.length; i++) {
+    (function(opt) {
+      var btn = document.createElement("button");
+      btn.className = "qr-btn";
+      btn.textContent = opt;
+      btn.onclick = function() { div.remove(); handleQuickReply(opt); };
+      div.appendChild(btn);
+    })(options[i]);
+  }
+  c.appendChild(div);
+  scrollBottom();
+}
+
+function handleQuickReply(opt) {
+  addUserMessage(opt);
+  if (opt === "Kontakt") { showContactForm(); return; }
+  askAI(opt);
+}
+
+function showTyping() {
+  var c = document.getElementById("chat-messages");
+  var div = document.createElement("div");
+  div.className = "msg bot";
+  div.id = "typing-indicator";
+  var b = document.createElement("div");
+  b.className = "bubble";
+  b.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  div.appendChild(b);
+  c.appendChild(div);
+  scrollBottom();
+}
+
+function removeTyping() {
+  var el = document.getElementById("typing-indicator");
+  if (el) el.remove();
+}
+
+function askAI(userText) {
+  conversationHistory.push({ role: "user", content: userText });
+  showTyping();
+
+  var contactKeywords = ["termin", "rueckruf", "email", "kontakt", "anfrage", "melden", "anruf", "vereinbaren"];
+  for (var i = 0; i < contactKeywords.length; i++) {
+    if (userText.toLowerCase().indexOf(contactKeywords[i]) !== -1 && !contactFormShown) {
+      removeTyping();
+      addBotMessage("Gerne helfe ich Ihnen einen Termin zu vereinbaren! F\u00fcllen Sie das Kontaktformular aus und wir melden uns schnellstm\u00f6glich bei Ihnen.");
+      setTimeout(showContactForm, 350);
+      return;
+    }
+  }
+
+  fetch(PROXY_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ system: SYSTEM_PROMPT, messages: conversationHistory })
+  })
+  .then(function(resp) { return resp.json(); })
+  .then(function(data) {
+    removeTyping();
+    if (data.content && data.content[0]) {
+      var reply = data.content[0].text;
+      conversationHistory.push({ role: "assistant", content: reply });
+      addBotMessage(reply);
+    } else {
+      addBotMessage("Bitte rufen Sie uns direkt an: " + PRAXIS_TEL);
+    }
+  })
+  .catch(function() {
+    removeTyping();
+    addBotMessage("Ein Fehler ist aufgetreten. Bitte kontaktieren Sie uns unter " + PRAXIS_TEL);
+  });
+}
+
+function showContactForm() {
+  contactFormShown = true;
+  var c = document.getElementById("chat-messages");
+  var wrapper = document.createElement("div");
+  wrapper.className = "msg bot";
+  wrapper.style.maxWidth = "100%";
+  wrapper.style.width = "100%";
+  var form = document.createElement("div");
+  form.className = "contact-form";
+  form.id = "contact-form-inner";
+  form.innerHTML =
+    '<div class="cf-title">Kontaktanfrage</div>' +
+    '<div class="cf-row"><label>Name</label><input type="text" id="cf-name" placeholder="Ihr Name"></div>' +
+    '<div class="cf-row"><label>Telefon</label><input type="tel" id="cf-tel" placeholder="Ihre Telefonnummer"></div>' +
+    '<div class="cf-row"><label>E-Mail</label><input type="email" id="cf-email" placeholder="Ihre E-Mail"></div>' +
+    '<div class="cf-row"><label>Anliegen</label><textarea id="cf-msg" rows="2" placeholder="Kurze Beschreibung"></textarea></div>' +
+    '<div style="display:flex;gap:8px;align-items:flex-start;margin-top:4px">' +
+    '<input type="checkbox" id="cf-dsgvo" style="margin-top:3px;flex-shrink:0;accent-color:#2D5954">' +
+    '<label for="cf-dsgvo" style="font-size:11px;color:#8A8A85;font-weight:300;text-transform:none;letter-spacing:0;line-height:1.5">' +
+    'Ich stimme der Verarbeitung meiner Daten gem&auml;&szlig; der <a href="https://www.zahnarzt-holtenauer.de/datenschutz" target="_blank" style="color:#2D5954">Datenschutzerkl&auml;rung</a> zu.' +
+    '</label></div>' +
+    '<button class="submit-btn" id="cf-submit">Absenden</button>';
+  wrapper.appendChild(form);
+  c.appendChild(wrapper);
+  document.getElementById("cf-submit").addEventListener("click", function() { submitContact(this); });
+  scrollBottom();
+}
+
+function submitContact(btn) {
+  var name = document.getElementById("cf-name").value.trim();
+  var tel = document.getElementById("cf-tel").value.trim();
+  var email = document.getElementById("cf-email").value.trim();
+  var msg = document.getElementById("cf-msg").value.trim();
+  var dsgvo = document.getElementById("cf-dsgvo").checked;
+
+  if (!name || (!tel && !email)) {
+    btn.textContent = "Bitte Name und Kontakt ausf\u00fcllen";
+    setTimeout(function() { btn.textContent = "Absenden"; }, 2000);
+    return;
+  }
+  if (!dsgvo) {
+    btn.textContent = "Bitte Datenschutz best\u00e4tigen";
+    setTimeout(function() { btn.textContent = "Absenden"; }, 2000);
+    return;
+  }
+
+  btn.textContent = "Wird gesendet...";
+  btn.disabled = true;
+
+  fetch(FORMSPREE_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify({ name: name, telefon: tel, email: email, anliegen: msg })
+  })
+  .then(function(resp) { return resp.json(); })
+  .then(function() {
+    document.getElementById("contact-form-inner").innerHTML =
+      '<div style="text-align:center;padding:10px 0">' +
+      '<div style="font-size:22px;margin-bottom:8px;color:#52B788">&#10003;</div>' +
+      '<div style="font-size:13px;font-weight:500;color:#1A1A1A">Vielen Dank, ' + name + '!</div>' +
+      '<div style="font-size:12px;color:#8A8A85;margin-top:4px">Wir melden uns so schnell wie m\u00f6glich bei Ihnen.</div>' +
+      '</div>';
+    scrollBottom();
+  })
+  .catch(function() {
+    btn.textContent = "Fehler - bitte erneut versuchen";
+    btn.disabled = false;
+  });
+}
+
+function sendMessage() {
+  var input = document.getElementById("user-input");
+  var text = input.value.trim();
+  if (!text) return;
+  addUserMessage(text);
+  input.value = "";
+  input.style.height = "auto";
+  askAI(text);
+}
+
+function handleKey(e) {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 80) + "px";
+}
+
+function scrollBottom() {
+  var c = document.getElementById("chat-messages");
+  setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
+}
+
+function getTime() {
+  return new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" });
+}
+</script>
+</body>
+</html>
