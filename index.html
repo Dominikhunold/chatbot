@@ -20,7 +20,7 @@
   --trigger2: #e85a38;
 }
 html, body { height: 100%; }
-body { font-family: 'Inter', sans-serif; background: transparent; min-height: 100vh; }
+body { font-family: 'Inter', sans-serif; background: transparent; min-height: 100vh; pointer-events: none; }
 #chat-trigger {
   position: fixed; bottom: 24px; right: 24px;
   width: 56px; height: 56px;
@@ -29,6 +29,7 @@ body { font-family: 'Inter', sans-serif; background: transparent; min-height: 10
   box-shadow: 0 4px 20px rgba(255,107,74,0.45);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   z-index: 9998;
+  pointer-events: all;
 }
 #chat-trigger:hover { transform: translateY(-2px); background: var(--trigger2); }
 #chat-window {
