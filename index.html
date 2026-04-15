@@ -115,7 +115,7 @@ body { font-family: 'Inter', sans-serif; background: transparent; min-height: 10
 <script>
 var PRAXIS_TEL = "0431 57667";
 var PROXY_URL = "https://chatbot-holtenauer.xnptg8nm8k.workers.dev";
-var FORMSPREE_URL = "https://formspree.io/f/mgoploar";
+var WEB3FORMS_KEY = "b112285a-e3cc-4639-a621-d1f1cc37859e";
 var weatherCache = null;
 var chatOpen = false;
 var conversationHistory = [];
@@ -279,10 +279,10 @@ function submitContact(btn) {
   if (!name || (!tel && !email)) { btn.textContent = "Bitte Name und Kontakt ausf\u00fcllen"; setTimeout(function() { btn.textContent = "Absenden"; }, 2000); return; }
   if (!dsgvo) { btn.textContent = "Bitte Datenschutz best\u00e4tigen"; setTimeout(function() { btn.textContent = "Absenden"; }, 2000); return; }
   btn.textContent = "Wird gesendet..."; btn.disabled = true;
-  fetch(FORMSPREE_URL, {
+  fetch("https://api.web3forms.com/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json", "Accept": "application/json" },
-    body: JSON.stringify({ name: name, telefon: tel, email: email, anliegen: msg })
+    body: JSON.stringify({ access_key: WEB3FORMS_KEY, subject: "Neue Chatbot-Anfrage - Zahnarzt Holtenauer", name: name, telefon: tel, email: email, anliegen: msg })
   })
   .then(function(resp) { return resp.json(); })
   .then(function() {
