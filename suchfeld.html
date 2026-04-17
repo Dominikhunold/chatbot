@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: transparent; font-family: 'Inter', -apple-system, sans-serif; }
+body { background: transparent; font-family: -apple-system, 'Helvetica Neue', sans-serif; }
 .wrapper {
   display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 40px 24px;
+  justify-content: center; padding: 32px 24px;
 }
 .headline {
   font-size: 15px; font-weight: 400; color: #6b6b65;
-  margin-bottom: 20px; letter-spacing: 0.01em; text-align: center;
+  margin-bottom: 16px; letter-spacing: 0.01em; text-align: center;
 }
 .search-bar {
   width: 100%; max-width: 600px; background: white;
@@ -27,7 +27,7 @@ body { background: transparent; font-family: 'Inter', -apple-system, sans-serif;
 }
 .search-icon { flex-shrink: 0; color: #FF6B4A; }
 .search-text {
-  flex: 1; font-size: 16px; font-weight: 300;
+  flex: 1; font-size: 15px; font-weight: 300;
   color: #bbb; padding: 10px 0; cursor: text;
 }
 .search-btn {
@@ -35,19 +35,19 @@ body { background: transparent; font-family: 'Inter', -apple-system, sans-serif;
   border-radius: 100px; padding: 12px 24px;
   font-size: 14px; font-weight: 500; cursor: pointer;
   flex-shrink: 0; transition: background 0.2s;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: -apple-system, 'Helvetica Neue', sans-serif;
 }
 .search-btn:hover { background: #e85a38; }
 .suggestions {
   display: flex; flex-wrap: wrap; gap: 8px;
-  margin-top: 16px; justify-content: center; max-width: 600px;
+  margin-top: 14px; justify-content: center; max-width: 600px;
 }
 .chip {
   background: white; border: 1px solid #e0ddd6;
   border-radius: 100px; padding: 6px 14px;
   font-size: 13px; color: #4a4a44; cursor: pointer;
   transition: all 0.15s; display: flex; align-items: center; gap: 5px;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: -apple-system, 'Helvetica Neue', sans-serif;
 }
 .chip::before {
   content: ''; width: 6px; height: 6px;
@@ -66,11 +66,11 @@ body { background: transparent; font-family: 'Inter', -apple-system, sans-serif;
       <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
     </svg>
     <span class="search-text">z.B. &bdquo;Was kostet ein Implantat?&ldquo;</span>
-    <button class="search-btn" onclick="openChat()">Fragen</button>
+    <button class="search-btn" onclick="openChat(); event.stopPropagation();">Fragen</button>
   </div>
   <div class="suggestions">
     <span class="chip" onclick="openChatWith('Termin vereinbaren')">Termin vereinbaren</span>
-    <span class="chip" onclick="openChatWith('Öffnungszeiten')">Öffnungszeiten</span>
+    <span class="chip" onclick="openChatWith('Was sind die Öffnungszeiten?')">Öffnungszeiten</span>
     <span class="chip" onclick="openChatWith('Implantate')">Implantate</span>
     <span class="chip" onclick="openChatWith('Aligner')">Aligner</span>
     <span class="chip" onclick="openChatWith('Angstpatienten')">Angstpatienten</span>
@@ -79,16 +79,10 @@ body { background: transparent; font-family: 'Inter', -apple-system, sans-serif;
 </div>
 <script>
 function openChat() {
-  var frame = window.parent.document.getElementById("chatbot-frame");
-  if (frame) {
-    frame.contentWindow.postMessage({ action: "open" }, "*");
-  }
+  window.parent.postMessage({ action: "open" }, "*");
 }
 function openChatWith(text) {
-  var frame = window.parent.document.getElementById("chatbot-frame");
-  if (frame) {
-    frame.contentWindow.postMessage({ action: "openWithText", text: text }, "*");
-  }
+  window.parent.postMessage({ action: "openWithText", text: text }, "*");
 }
 </script>
 </body>
