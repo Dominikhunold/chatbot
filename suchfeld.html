@@ -7,46 +7,42 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: transparent; font-family: 'Inter', -apple-system, sans-serif; }
-
 .wrapper { display: flex; flex-direction: column; align-items: center; padding: 32px 24px 0; }
-
-.headline { font-size: 15px; font-weight: 400; color: #6b6b65; margin-bottom: 16px; letter-spacing: 0.01em; text-align: center; }
+.headline { font-size: 15px; font-weight: 400; color: #6b6b65; margin-bottom: 16px; text-align: center; }
 
 .search-bar {
-  width: 100%; max-width: 600px; background: white;
-  border-radius: 100px; border: 1.5px solid #e0ddd6;
-  display: flex; align-items: center;
-  padding: 6px 6px 6px 22px; gap: 12px; cursor: text;
+  width: 100%; max-width: 600px; background: white; border-radius: 100px;
+  border: 1.5px solid #e0ddd6; display: flex; align-items: center;
+  padding: 6px 6px 6px 22px; gap: 12px;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.search-bar:hover, .search-bar.active {
-  border-color: #FF6B4A;
-  box-shadow: 0 2px 16px rgba(255,107,74,0.10);
-}
+.search-bar:focus-within { border-color: #FF6B4A; box-shadow: 0 2px 16px rgba(255,107,74,0.10); }
 .search-icon { flex-shrink: 0; color: #FF6B4A; }
 .search-input {
   flex: 1; font-size: 15px; font-weight: 300; color: #1a1a1a;
   padding: 10px 0; border: none; outline: none; background: transparent;
-  font-family: 'Inter', -apple-system, sans-serif;
+  font-family: 'Inter', -apple-system, sans-serif; min-width: 0;
 }
 .search-input::placeholder { color: #bbb; }
 .search-btn {
-  background: #FF6B4A; color: white; border: none;
-  border-radius: 100px; padding: 12px 24px;
-  font-size: 14px; font-weight: 500; cursor: pointer;
-  flex-shrink: 0; transition: background 0.2s;
+  background: #FF6B4A; color: white; border: none; border-radius: 100px;
+  padding: 12px 24px; font-size: 14px; font-weight: 500; cursor: pointer;
+  white-space: nowrap; flex-shrink: 0; transition: background 0.2s;
   font-family: 'Inter', -apple-system, sans-serif;
 }
 .search-btn:hover { background: #e85a38; }
 
-.suggestions {
-  display: flex; flex-wrap: wrap; gap: 8px;
-  margin-top: 14px; justify-content: center; max-width: 600px;
+@media (max-width: 480px) {
+  .search-bar { border-radius: 16px; padding: 10px 16px; flex-wrap: wrap; }
+  .search-input { width: 100%; }
+  .search-btn { width: 100%; border-radius: 12px; margin-top: 4px; }
+  .search-icon { display: none; }
 }
+
+.suggestions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 600px; margin-top: 14px; }
 .chip {
-  background: white; border: 1px solid #e0ddd6;
-  border-radius: 100px; padding: 6px 14px;
-  font-size: 13px; color: #4a4a44; cursor: pointer;
+  background: white; border: 1px solid #e0ddd6; border-radius: 100px;
+  padding: 6px 14px; font-size: 13px; color: #4a4a44; cursor: pointer;
   transition: all 0.15s; display: flex; align-items: center; gap: 5px;
   font-family: 'Inter', -apple-system, sans-serif;
 }
@@ -54,73 +50,75 @@ body { background: transparent; font-family: 'Inter', -apple-system, sans-serif;
 .chip:hover { background: #FF6B4A; border-color: #FF6B4A; color: white; }
 .chip:hover::before { background: white; }
 
-.chat-container {
-  width: 100%; max-width: 600px; margin-top: 16px;
-  background: white; border-radius: 16px; border: 1px solid #e8e8e4;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  overflow: hidden; display: none; flex-direction: column;
-  max-height: 420px;
+.convo-container {
+  width: 100%; max-width: 600px; margin-top: 24px;
+  display: none; flex-direction: column; gap: 12px;
 }
-.chat-container.open { display: flex; }
+.convo-container.open { display: flex; }
 
-.chat-header {
-  padding: 12px 16px; background: white; border-bottom: 1px solid #e8e8e4;
-  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
-}
-.header-icon { width: 30px; height: 30px; background: #F7F7F5; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
-.header-title { font-size: 13px; font-weight: 500; color: #1a1a1a; }
-.header-status { font-size: 11px; color: #8a8a85; }
-.status-dot { display: inline-block; width: 6px; height: 6px; background: #52B788; border-radius: 50%; margin-right: 3px; vertical-align: middle; }
-.header-close { margin-left: auto; background: none; border: none; cursor: pointer; color: #8a8a85; padding: 4px; border-radius: 6px; display: flex; }
-.header-close:hover { background: #f7f7f5; }
-
-.chat-messages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 9px; background: #F7F7F5; min-height: 0; }
-.msg { display: flex; flex-direction: column; max-width: 82%; }
+.msg { display: flex; flex-direction: column; max-width: 85%; }
 .msg.bot { align-self: flex-start; }
 .msg.user { align-self: flex-end; }
-.bubble { padding: 9px 13px; border-radius: 11px; font-size: 13.5px; line-height: 1.5; font-weight: 300; }
-.msg.bot .bubble { background: white; color: #1a1a1a; border: 1px solid #e8e8e4; border-bottom-left-radius: 3px; }
-.msg.user .bubble { background: #2D5954; color: white; font-weight: 400; border-bottom-right-radius: 3px; }
-.msg-time { font-size: 10px; color: #c4c4bf; margin-top: 3px; font-weight: 300; }
+.bubble {
+  padding: 10px 15px; border-radius: 18px;
+  font-size: 14px; line-height: 1.55; font-weight: 300;
+}
+.msg.bot .bubble { background: #f0ede8; color: #1a1a1a; border-bottom-left-radius: 4px; }
+.msg.user .bubble { background: #FF6B4A; color: white; font-weight: 400; border-bottom-right-radius: 4px; }
+.msg-time { font-size: 10px; color: #c4c4bf; margin-top: 4px; font-weight: 300; }
 .msg.user .msg-time { text-align: right; }
 
-.typing-dots { display: flex; gap: 3px; align-items: center; padding: 2px 0; }
-.typing-dots span { width: 5px; height: 5px; background: #c4c4bf; border-radius: 50%; animation: dot 1.2s ease-in-out infinite; }
+.typing-dots { display: flex; gap: 4px; align-items: center; padding: 4px 2px; }
+.typing-dots span { width: 6px; height: 6px; background: #c4c4bf; border-radius: 50%; animation: dot 1.2s ease-in-out infinite; }
 .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
 .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
 @keyframes dot { 0%,80%,100% { transform: scale(0.7); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
 
-.quick-replies { display: flex; flex-wrap: wrap; gap: 5px; }
-.qr-btn { background: white; border: 1px solid #e8e8e4; color: #1a1a1a; padding: 5px 11px; border-radius: 7px; font-size: 12px; font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.14s; }
-.qr-btn:hover { background: #2D5954; border-color: #2D5954; color: white; }
-
-.chat-input-bar { padding: 10px 12px; background: white; border-top: 1px solid #e8e8e4; display: flex; gap: 7px; align-items: flex-end; flex-shrink: 0; }
-#chat-user-input {
-  flex: 1; min-width: 0; padding: 8px 11px; border: 1px solid #e8e8e4;
-  border-radius: 9px; font-family: 'Inter', sans-serif; font-size: 15px;
-  font-weight: 300; color: #1a1a1a; background: #F7F7F5; outline: none;
-  resize: none; max-height: 80px; overflow-y: auto; line-height: 1.45;
+.quick-replies { display: flex; flex-wrap: wrap; gap: 6px; max-width: 600px; }
+.qr-btn {
+  background: white; border: 1.5px solid #e0ddd6; color: #1a1a1a;
+  padding: 7px 14px; border-radius: 100px; font-size: 13px;
+  font-family: 'Inter', sans-serif; cursor: pointer; transition: all 0.14s;
 }
-#chat-user-input:focus { border-color: #2D5954; }
-#chat-user-input::placeholder { color: #c4c4bf; }
-#chat-send-btn { width: 34px; height: 34px; min-width: 34px; background: #2D5954; border: none; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-#chat-send-btn:hover { background: #3D7068; }
-.chat-disclaimer { text-align: center; font-size: 10px; color: #c4c4bf; padding: 4px 12px 7px; background: white; font-weight: 300; flex-shrink: 0; }
+.qr-btn:hover { background: #FF6B4A; border-color: #FF6B4A; color: white; }
 
-.spacer { height: 24px; }
+.convo-input-row {
+  display: flex; gap: 8px; align-items: flex-end;
+  width: 100%; max-width: 600px; margin-top: 8px;
+}
+.convo-input {
+  flex: 1; padding: 10px 16px; border: 1.5px solid #e0ddd6;
+  border-radius: 100px; font-family: 'Inter', sans-serif;
+  font-size: 14px; font-weight: 300; color: #1a1a1a;
+  background: white; outline: none; resize: none;
+  max-height: 80px; overflow-y: auto; line-height: 1.45;
+  transition: border-color 0.2s;
+}
+.convo-input:focus { border-color: #FF6B4A; }
+.convo-input::placeholder { color: #c4c4bf; }
+.convo-send {
+  width: 38px; height: 38px; min-width: 38px; background: #FF6B4A;
+  border: none; border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.2s;
+}
+.convo-send:hover { background: #e85a38; }
+
+.disclaimer { font-size: 10px; color: #c4c4bf; text-align: center; margin-top: 8px; font-weight: 300; }
+.spacer { height: 32px; }
 </style>
 </head>
 <body>
 <div class="wrapper">
   <p class="headline">Haben Sie eine Frage an unsere Praxis?</p>
-  <div class="search-bar" id="search-bar">
+  <div class="search-bar">
     <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
       <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
     </svg>
-    <input type="text" id="search-input" class="search-input" placeholder="z.B. &bdquo;Was kostet ein Implantat?&ldquo;" onfocus="openInlineChat()" onkeydown="handleSearchKey(event)">
+    <input type="text" id="search-input" class="search-input" placeholder="z.B. Was kostet ein Implantat?" onkeydown="handleSearchKey(event)">
     <button class="search-btn" onclick="sendSearchQuery()">Fragen</button>
   </div>
-  <div class="suggestions">
+  <div class="suggestions" id="chips">
     <span class="chip" onclick="sendChip('Termin vereinbaren')">Termin vereinbaren</span>
     <span class="chip" onclick="sendChip('Was sind die Öffnungszeiten?')">Öffnungszeiten</span>
     <span class="chip" onclick="sendChip('Implantate')">Implantate</span>
@@ -129,30 +127,17 @@ body { background: transparent; font-family: 'Inter', -apple-system, sans-serif;
     <span class="chip" onclick="sendChip('Anfahrt & Parken')">Anfahrt</span>
   </div>
 
-  <div class="chat-container" id="inline-chat">
-    <div class="chat-header">
-      <div class="header-icon">&#x1F9B7;</div>
-      <div>
-        <div class="header-title">Praxis-Assistent</div>
-        <div class="header-status"><span class="status-dot"></span>Online</div>
-      </div>
-      <button class="header-close" onclick="closeInlineChat()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
-    </div>
-    <div class="chat-messages" id="inline-messages"></div>
-    <div class="chat-input-bar">
-      <textarea id="chat-user-input" rows="1" placeholder="Nachricht ..." onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
-      <button id="chat-send-btn" onclick="sendChatMessage()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-        </svg>
-      </button>
-    </div>
-    <div class="chat-disclaimer">KI-Assistent &middot; kein Ersatz f&uuml;r &auml;rztliche Beratung</div>
+  <div class="convo-container" id="convo"></div>
+
+  <div class="convo-input-row" id="input-row" style="display:none;">
+    <textarea id="convo-input" class="convo-input" rows="1" placeholder="Nachricht schreiben ..." onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
+    <button class="convo-send" onclick="sendChatMessage()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
   </div>
+  <div class="disclaimer" id="disclaimer" style="display:none;">KI-Assistent &middot; kein Ersatz f&uuml;r &auml;rztliche Beratung</div>
   <div class="spacer"></div>
 </div>
 
@@ -160,77 +145,58 @@ body { background: transparent; font-family: 'Inter', -apple-system, sans-serif;
 var PROXY_URL = "https://chatbot-holtenauer.xnptg8nm8k.workers.dev";
 var PRAXIS_TEL = "0431 57667";
 var conversationHistory = [];
-var chatInitialized = false;
-var contactFormShown = false;
+var chatStarted = false;
 
-var SYSTEM_PROMPT = "Du bist der freundliche KI-Assistent der Zahnarztpraxis 'Zahn\u00e4rzte auf der Holtenauer' in Kiel. Antworte stets auf Deutsch, herzlich und kompetent. Halte Antworten kurz und nat\u00fcrlich \u2013 2-3 S\u00e4tze reichen meist. Stelle am Ende jeder Antwort eine kurze nat\u00fcrliche R\u00fcckfrage. Stelle keine Diagnosen. WICHTIG bei Kostenfragen: Sage NIEMALS, dass eine Behandlung komplett von der gesetzlichen Krankenkasse \u00fcbernommen wird. Bei GKV-Patienten k\u00f6nnen f\u00fcr hochwertige Materialien Zuzahlungen entstehen. Privat Versicherte haben in der Regel vollen Versicherungsschutz. Bei konkreten Kostenfragen empfehle einen individuellen Heil- und Kostenplan. Bei akuten Schmerzen weise auf die Notfallnummer hin: 0431 57667. Bei Begr\u00fc\u00dfung antworte IMMER mit: Willkommen bei den Zahn\u00e4rzten auf der Holtenauer! Sch\u00f6n, dass Sie da sind \u2013 wie kann ich Ihnen helfen?\n\nPRAXISINFOS:\nAdresse: Holtenauer Stra\u00dfe 68, 24105 Kiel. Telefon: 0431 57667. Email: praxis@zahnarzt-holtenauer.de.\n\u00d6ffnungszeiten: Mo 08-18, Di 08-18, Mi 08-14, Do 08-18, Fr 08-13 Uhr. Flexible Termine f\u00fcr Berufst\u00e4tige m\u00f6glich.\nAnfahrt: Auto: Parkplatz Schlemmermarkt Freund direkt hinter der Praxis. Bus: Haltestelle Schauenburger\u00dftrase gegen\u00fcber, Linien 11, 60s, 62, 501/502, 900/901.\nTeam: Dr. Dominik Hunold (Inhaber), Dr. Liane Kruse, An\u00e4sthesist Detlev Stolle.\nLeistungen: Zahnerhalt, Prophylaxe, Aligner/Invisalign (kostenlose Ersteinsch\u00e4tzung), Implantate, Parodontitis, Kronen, Br\u00fccken, Bleaching, Veneers, Angstpatienten mit D\u00e4mmerschlaf.\nRatenzahlung \u00fcber PVS m\u00f6glich.";
+var SYSTEM_PROMPT = "Du bist der freundliche KI-Assistent der Zahnarztpraxis 'Zahn\u00e4rzte auf der Holtenauer' in Kiel. Antworte stets auf Deutsch, herzlich und kompetent. Halte Antworten kurz \u2013 2-3 S\u00e4tze. Stelle am Ende eine kurze R\u00fcckfrage. Keine Diagnosen. Bei Kostenfragen: GKV kann Zuzahlungen haben, Privat meist vollen Schutz. Bei Schmerzen: 0431 57667. Bei Begr\u00fc\u00dfung IMMER: Willkommen bei den Zahn\u00e4rzten auf der Holtenauer! Sch\u00f6n, dass Sie da sind \u2013 wie kann ich Ihnen helfen?\n\nPRAXIS: Holtenauer Stra\u00dfe 68, Kiel. Tel: 0431 57667. Mo-Di 08-18, Mi 08-14, Do 08-18, Fr 08-13. Parkplatz Schlemmermarkt Freund. Bus: Schauenburgerstra\u00dfe. Team: Dr. Dominik Hunold, Dr. Liane Kruse, An\u00e4sthesist Detlev Stolle. Leistungen: Prophylaxe, Aligner/Invisalign (kostenlose Ersteinsch\u00e4tzung), Implantate, Parodontitis, Kronen, Bleaching, Veneers, Angstpatienten mit D\u00e4mmerschlaf. Ratenzahlung \u00fcber PVS.";
 
-function openInlineChat() {
-  var chat = document.getElementById("inline-chat");
-  chat.classList.add("open");
+function startChat(firstMessage) {
+  if (!chatStarted) {
+    chatStarted = true;
+    document.getElementById("convo").classList.add("open");
+    document.getElementById("input-row").style.display = "flex";
+    document.getElementById("disclaimer").style.display = "block";
+    document.getElementById("chips").style.display = "none";
+  }
   notifyResize();
-  if (!chatInitialized) {
-    chatInitialized = true;
-    showWelcome();
+  if (firstMessage) {
+    addUserMessage(firstMessage);
+    askAI(firstMessage);
   }
 }
 
-function closeInlineChat() {
-  document.getElementById("inline-chat").classList.remove("open");
-  document.getElementById("search-input").value = "";
-  notifyResize();
-}
-
-function notifyResize() {
-  setTimeout(function() {
-    var h = document.body.scrollHeight;
-    window.parent.postMessage({ iframeHeight: h }, "*");
-  }, 50);
-}
-
-function showWelcome() {
-  addBotMessage("Willkommen bei den Zahn\u00e4rzten auf der Holtenauer! Sch\u00f6n, dass Sie da sind \u2013 wie kann ich Ihnen helfen?");
-  setTimeout(function() {
-    addQuickReplies(["Termin vereinbaren", "Implantate", "Aligner", "Angstpatient", "Kontakt"]);
-  }, 300);
-}
-
 function addBotMessage(text) {
-  var c = document.getElementById("inline-messages");
+  var c = document.getElementById("convo");
   var div = document.createElement("div"); div.className = "msg bot";
   var b = document.createElement("div"); b.className = "bubble"; b.textContent = text;
   var t = document.createElement("div"); t.className = "msg-time"; t.textContent = getTime();
-  div.appendChild(b); div.appendChild(t); c.appendChild(div); scrollBottom();
+  div.appendChild(b); div.appendChild(t); c.appendChild(div);
+  notifyResize(); scrollBottom();
 }
 
 function addUserMessage(text) {
-  var c = document.getElementById("inline-messages");
+  var c = document.getElementById("convo");
   var div = document.createElement("div"); div.className = "msg user";
   var b = document.createElement("div"); b.className = "bubble"; b.textContent = text;
   var t = document.createElement("div"); t.className = "msg-time"; t.textContent = getTime();
-  div.appendChild(b); div.appendChild(t); c.appendChild(div); scrollBottom();
+  div.appendChild(b); div.appendChild(t); c.appendChild(div);
+  notifyResize(); scrollBottom();
 }
 
 function addQuickReplies(options) {
-  var c = document.getElementById("inline-messages");
+  var c = document.getElementById("convo");
   var div = document.createElement("div"); div.className = "quick-replies";
   for (var i = 0; i < options.length; i++) {
     (function(opt) {
       var btn = document.createElement("button"); btn.className = "qr-btn"; btn.textContent = opt;
-      btn.onclick = function() { div.remove(); handleQuickReply(opt); };
+      btn.onclick = function() { div.remove(); addUserMessage(opt); askAI(opt); };
       div.appendChild(btn);
     })(options[i]);
   }
-  c.appendChild(div); scrollBottom();
-}
-
-function handleQuickReply(opt) {
-  addUserMessage(opt);
-  askAI(opt);
+  c.appendChild(div); notifyResize(); scrollBottom();
 }
 
 function showTyping() {
-  var c = document.getElementById("inline-messages");
+  var c = document.getElementById("convo");
   var div = document.createElement("div"); div.className = "msg bot"; div.id = "typing-ind";
   var b = document.createElement("div"); b.className = "bubble";
   b.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
@@ -256,48 +222,38 @@ function askAI(text) {
       addBotMessage(reply);
     } else { addBotMessage("Bitte rufen Sie uns direkt an: " + PRAXIS_TEL); }
   })
-  .catch(function() { removeTyping(); addBotMessage("Ein Fehler ist aufgetreten. Bitte kontaktieren Sie uns unter " + PRAXIS_TEL); });
+  .catch(function() { removeTyping(); addBotMessage("Fehler. Bitte kontaktieren Sie uns: " + PRAXIS_TEL); });
 }
 
 function sendSearchQuery() {
   var input = document.getElementById("search-input");
   var text = input.value.trim();
-  openInlineChat();
-  if (text) {
-    setTimeout(function() {
-      input.value = "";
-      addUserMessage(text);
-      askAI(text);
-    }, chatInitialized ? 0 : 600);
+  input.value = "";
+  startChat(text || null);
+  if (!text && !chatStarted) {
+    addBotMessage("Willkommen bei den Zahn\u00e4rzten auf der Holtenauer! Sch\u00f6n, dass Sie da sind \u2013 wie kann ich Ihnen helfen?");
+    setTimeout(function() { addQuickReplies(["Termin vereinbaren", "Implantate", "Aligner", "Angstpatient"]); }, 300);
   }
 }
 
-function sendChip(text) {
-  openInlineChat();
-  setTimeout(function() {
-    addUserMessage(text);
-    askAI(text);
-  }, chatInitialized ? 0 : 600);
-}
+function sendChip(text) { startChat(text); }
 
 function sendChatMessage() {
-  var input = document.getElementById("chat-user-input");
+  var input = document.getElementById("convo-input");
   var text = input.value.trim(); if (!text) return;
   addUserMessage(text); input.value = ""; input.style.height = "auto"; askAI(text);
 }
 
-function handleSearchKey(e) {
-  if (e.key === "Enter") { e.preventDefault(); sendSearchQuery(); }
-}
-
-function handleChatKey(e) {
-  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); }
-}
-
+function handleSearchKey(e) { if (e.key === "Enter") { e.preventDefault(); sendSearchQuery(); } }
+function handleChatKey(e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } }
 function autoResize(el) { el.style.height = "auto"; el.style.height = Math.min(el.scrollHeight, 80) + "px"; }
-function scrollBottom() { var c = document.getElementById("inline-messages"); setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50); }
+function scrollBottom() { setTimeout(function() { window.scrollTo(0, document.body.scrollHeight); }, 80); }
 function getTime() { return new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }); }
-
+function notifyResize() {
+  setTimeout(function() {
+    window.parent.postMessage({ iframeHeight: document.body.scrollHeight + 40 }, "*");
+  }, 100);
+}
 notifyResize();
 </script>
 </body>
