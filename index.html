@@ -140,6 +140,16 @@ async function fetchWeather() {
   } catch(e) { return null; }
 }
 
+window.addEventListener("message", function(e) {
+  if (e.data && e.data.action === "open") { if (!chatOpen) toggleChat(); }
+  if (e.data && e.data.action === "openWithText") {
+    if (!chatOpen) toggleChat();
+    setTimeout(function() {
+      var input = document.getElementById("user-input");
+      if (input) { input.value = e.data.text; input.focus(); autoResize(input); }
+    }, 400);
+  }
+});
 function notifyParent(open) {
   try { window.parent.postMessage({ chatbotOpen: open }, "*"); } catch(e) {}
 }
