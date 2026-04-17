@@ -155,7 +155,7 @@ body { background: transparent; font-family: 'Open Sans', sans-serif; font-size:
 <script>
 var PROXY = "https://chatbot-holtenauer.xnptg8nm8k.workers.dev";
 var TEL = "0431 57667";
-var history = [];
+var chatHistory = [];
 var started = false;
 
 var PROMPT = "Du bist der freundliche KI-Assistent der Zahnarztpraxis 'Zahn\u00e4rzte auf der Holtenauer' in Kiel. Antworte auf Deutsch, herzlich und kompetent. 2-3 S\u00e4tze, dann eine kurze R\u00fcckfrage. Keine Diagnosen. GKV kann Zuzahlungen haben, Privat meist vollen Schutz. Notfall: 0431 57667. Bei Begr\u00fc\u00dfung IMMER: Willkommen bei den Zahn\u00e4rzten auf der Holtenauer! Sch\u00f6n, dass Sie da sind \u2013 wie kann ich Ihnen helfen?\n\nPRAXIS: Holtenauer Stra\u00dfe 68, Kiel. Tel: 0431 57667. Mo-Di 08-18, Mi 08-14, Do 08-18, Fr 08-13. Parkplatz Schlemmermarkt Freund. Bus: Schauenburgerstra\u00dfe (Linien 11, 60s, 62, 501/502, 900/901). Dr. Dominik Hunold, Dr. Liane Kruse, An\u00e4sthesist Detlev Stolle. Leistungen: Prophylaxe, Aligner/Invisalign (kostenlose Ersteinsch\u00e4tzung), Implantate, Parodontitis, Kronen, Bleaching, Veneers, Angstpatienten mit D\u00e4mmerschlaf. Ratenzahlung PVS.";
@@ -210,15 +210,15 @@ function showTyping() {
 function removeTyping() { var el = document.getElementById("typing"); if (el) el.remove(); }
 
 function ask(text) {
-  history.push({ role: "user", content: text });
+  chatHistory.push({ role: "user", content: text });
   showTyping();
-  fetch(PROXY, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ system: PROMPT, messages: history }) })
+  fetch(PROXY, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ system: PROMPT, messages: chatHistory }) })
   .then(function(r) { return r.json(); })
   .then(function(data) {
     removeTyping();
     if (data.content && data.content[0]) {
       var reply = data.content[0].text;
-      history.push({ role: "assistant", content: reply });
+      chatHistory.push({ role: "assistant", content: reply });
       addBot(reply);
     } else { addBot("Bitte rufen Sie uns an: " + TEL); }
   })
