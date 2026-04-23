@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mylo Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,400;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0F0F0D; --surface: #1A1A16; --surface2: #222220;
+  --border: rgba(255,255,255,0.08); --text: #F0EDE8; --muted: #6B6B65;
+  --accent: #FF6B4A; --green: #52B788; --mono: 'DM Mono', monospace;
+}
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
+.login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.login-box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 48px; width: 400px; text-align: center; }
+.login-logo { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 400; margin-bottom: 8px; }
+.login-logo span { color: var(--accent); }
+.login-sub { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+.login-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); outline: none; margin-bottom: 14px; }
+.login-input::placeholder { color: var(--muted); }
+.login-btn { width: 100%; background: var(--accent); color: white; border: none; border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 500; cursor: pointer; }
+.login-btn:hover { background: #e85a38; }
+.login-error { font-size: 12px; color: #E24B4A; margin-top: 10px; display: none; }
+.dashboard { display: none; min-height: 100vh; }
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 220px; background: var(--surface); border-right: 1px solid var(--border); padding: 32px 20px; display: flex; flex-direction: column; gap: 8px; }
+.sidebar-logo { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.sidebar-logo span { color: var(--accent); }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; font-size: 13px; color: var(--muted); cursor: pointer; border: none; background: none; width: 100%; text-align: left; }
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: rgba(255,107,74,0.12); color: var(--accent); }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.sidebar-footer { margin-top: auto; font-size: 11px; color: var(--muted); }
+.main { margin-left: 220px; padding: 40px 48px; }
+.main-title { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 300; margin-bottom: 6px; }
+.main-title em { font-style: italic; color: var(--accent); }
+.main-sub { font-size: 13px; color: var(--muted); margin-bottom: 40px; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+.stat-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.stat-value { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 300; }
+.stat-value.accent { color: var(--accent); }
+.stat-value.green { color: var(--green); }
+.logs-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.logs-title { font-size: 15px; font-weight: 500; }
+.refresh-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); padding: 8px 16px; border-radius: 8px; font-size: 12px; cursor: pointer; }
+.refresh-btn:hover { color: var(--text); border-color: var(--accent); }
+.log-entry { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 22px; margin-bottom: 10px; }
+.log-entry:hover { border-color: rgba(255,107,74,0.3); }
+.log-meta { display: flex; gap: 12px; margin-bottom: 8px; }
+.log-time { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.log-length { font-size: 11px; color: var(--muted); background: var(--surface2); padding: 2px 8px; border-radius: 4px; }
+.log-question { font-size: 14px; font-weight: 300; line-height: 1.5; }
+.loading { text-align: center; padding: 60px; color: var(--muted); }
+.empty { text-align: center; padding: 60px; color: var(--muted); }
+.settings-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 16px; max-width: 600px; }
+.settings-title { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+.settings-desc { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+.settings-input { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; font-family: var(--mono); font-size: 13px; color: var(--text); outline: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+</style>
+</head>
+<body>
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">My<span>lo</span></div>
+    <p class="login-sub">Chatbot Dashboard</p>
+    <input type="text" class="login-input" id="worker-url" placeholder="Worker URL" value="https://chatbot-dashboard.xnptg8nm8k.workers.dev">
+    <input type="password" class="login-input" id="token-input" placeholder="Zugangscode">
+    <button class="login-btn" onclick="login()">Einloggen</button>
+    <div class="login-error" id="login-error">Zugangscode falsch oder Worker nicht erreichbar.</div>
+  </div>
+</div>
+<div class="dashboard" id="dashboard">
+  <div class="sidebar">
+    <div class="sidebar-logo">My<span>lo</span></div>
+    <button class="nav-item active" onclick="showTab('logs')"><span class="nav-dot"></span> Nachrichten</button>
+    <button class="nav-item" onclick="showTab('stats')"><span class="nav-dot"></span> Statistik</button>
+    <button class="nav-item" onclick="showTab('settings')"><span class="nav-dot"></span> Einstellungen</button>
+    <div class="sidebar-footer">Mylo Dashboard v1.0</div>
+  </div>
+  <div class="main">
+    <div id="tab-logs">
+      <div class="main-title">Patienten<em>fragen</em></div>
+      <div class="main-sub">Alle Nachrichten die über den Chatbot eingegangen sind</div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Gesamt</div><div class="stat-value accent" id="stat-total">–</div></div>
+        <div class="stat-card"><div class="stat-label">Heute</div><div class="stat-value green" id="stat-today">–</div></div>
+        <div class="stat-card"><div class="stat-label">Diese Woche</div><div class="stat-value" id="stat-week">–</div></div>
+        <div class="stat-card"><div class="stat-label">Ø Länge</div><div class="stat-value" id="stat-avg">–</div></div>
+      </div>
+      <div class="logs-header"><span class="logs-title">Letzte Nachrichten</span><button class="refresh-btn" onclick="loadLogs()">↻ Aktualisieren</button></div>
+      <div id="logs-container"><div class="loading"><span class="spinner"></span></div></div>
+    </div>
+    <div id="tab-stats" style="display:none;">
+      <div class="main-title">Sta<em>tistik</em></div>
+      <div class="main-sub">Übersicht über die Chatbot-Nutzung</div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">Gesamt</div><div class="stat-value accent" id="stat2-total">–</div></div>
+        <div class="stat-card"><div class="stat-label">Heute</div><div class="stat-value green" id="stat2-today">–</div></div>
+        <div class="stat-card"><div class="stat-label">Diese Woche</div><div class="stat-value" id="stat2-week">–</div></div>
+        <div class="stat-card"><div class="stat-label">Diesen Monat</div><div class="stat-value" id="stat2-month">–</div></div>
+      </div>
+      <div style="margin-top:32px;"><div class="logs-title" style="margin-bottom:16px;">Häufigste Themen</div><div id="topics-container"></div></div>
+    </div>
+    <div id="tab-settings" style="display:none;">
+      <div class="main-title">Ein<em>stellungen</em></div>
+      <div class="main-sub">Dashboard-Konfiguration</div>
+      <div class="settings-card"><div class="settings-title">Worker URL</div><div class="settings-desc">URL des Cloudflare Dashboard Workers</div><input class="settings-input" id="settings-url" readonly></div>
+    </div>
+  </div>
+</div>
+<script>
+var WORKER_URL="",TOKEN="",allLogs=[];
+function login(){
+  var url=document.getElementById("worker-url").value.trim();
+  var token=document.getElementById("token-input").value.trim();
+  if(!url||!token){showError("Bitte alle Felder ausfüllen.");return;}
+  WORKER_URL=url;TOKEN=token;
+  document.querySelector(".login-btn").textContent="Verbinde...";
+  fetch(WORKER_URL+"?token="+encodeURIComponent(TOKEN))
+    .then(function(r){if(r.status===401)throw new Error("Unauthorized");return r.json();})
+    .then(function(data){allLogs=data;document.getElementById("login-screen").style.display="none";document.getElementById("dashboard").style.display="block";document.getElementById("settings-url").value=WORKER_URL;renderLogs();updateStats();})
+    .catch(function(){showError("Zugangscode falsch oder Worker nicht erreichbar.");document.querySelector(".login-btn").textContent="Einloggen";});
+}
+function showError(msg){var el=document.getElementById("login-error");el.textContent=msg;el.style.display="block";document.querySelector(".login-btn").textContent="Einloggen";}
+function loadLogs(){
+  document.getElementById("logs-container").innerHTML='<div class="loading"><span class="spinner"></span></div>';
+  fetch(WORKER_URL+"?token="+encodeURIComponent(TOKEN)).then(function(r){return r.json();}).then(function(data){allLogs=data;renderLogs();updateStats();}).catch(function(){document.getElementById("logs-container").innerHTML='<div class="empty">Fehler beim Laden.</div>';});
+}
+function renderLogs(){
+  var c=document.getElementById("logs-container");
+  if(!allLogs.length){c.innerHTML='<div class="empty">Noch keine Nachrichten</div>';return;}
+  var html="";
+  allLogs.slice(0,50).forEach(function(log){html+='<div class="log-entry"><div class="log-meta"><span class="log-time">'+(log.zeit||"–")+'</span><span class="log-length">Nachricht '+(log.gespraechslaenge||1)+'</span></div><div class="log-question">'+escapeHtml(log.frage||"–")+'</div></div>';});
+  c.innerHTML=html;
+}
+function updateStats(){
+  var total=allLogs.length,today=0,week=0,month=0,now=new Date(),totalLen=0;
+  allLogs.forEach(function(log){
+    totalLen+=(log.gespraechslaenge||1);
+    if(log.zeit){var p=log.zeit.split(", ");if(p.length>=1){var d=p[0].split(".");if(d.length===3){var dt=new Date(d[2],d[1]-1,d[0]),diff=(now-dt)/(1000*60*60*24);if(diff<1)today++;if(diff<7)week++;if(diff<30)month++;}}}
+  });
+  var avg=total?Math.round(totalLen/total):0;
+  ["total","today","week","avg"].forEach(function(k,i){document.getElementById("stat-"+k).textContent=[total,today,week,avg][i];});
+  document.getElementById("stat2-total").textContent=total;document.getElementById("stat2-today").textContent=today;document.getElementById("stat2-week").textContent=week;document.getElementById("stat2-month").textContent=month;
+  renderTopics();
+}
+function renderTopics(){
+  var kw=["Implantat","Aligner","Termin","Öffnungszeit","Anfahrt","Kosten","Schmerz","Bleaching","Parodontitis","Angst","Krone"],counts={};
+  kw.forEach(function(k){counts[k]=0;});
+  allLogs.forEach(function(log){var q=(log.frage||"").toLowerCase();kw.forEach(function(k){if(q.indexOf(k.toLowerCase())!==-1)counts[k]++;});});
+  var sorted=kw.filter(function(k){return counts[k]>0;}).sort(function(a,b){return counts[b]-counts[a];});
+  var max=sorted.length?counts[sorted[0]]:1,html="";
+  sorted.forEach(function(k){var pct=Math.round(counts[k]/max*100);html+='<div style="margin-bottom:12px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:13px">'+k+'</span><span style="font-size:12px;color:var(--muted)">'+counts[k]+'x</span></div><div style="background:var(--surface2);border-radius:4px;height:6px;"><div style="background:var(--accent);width:'+pct+'%;height:6px;border-radius:4px;"></div></div></div>';});
+  if(!html)html='<div style="color:var(--muted);font-size:13px;">Noch keine Daten</div>';
+  document.getElementById("topics-container").innerHTML=html;
+}
+function showTab(tab){["logs","stats","settings"].forEach(function(t){document.getElementById("tab-"+t).style.display=t===tab?"block":"none";});document.querySelectorAll(".nav-item").forEach(function(el,i){el.classList.toggle("active",["logs","stats","settings"][i]===tab);});}
+function escapeHtml(text){return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+document.getElementById("token-input").addEventListener("keydown",function(e){if(e.key==="Enter")login();});
+</script>
+</body>
+</html>
