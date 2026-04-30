@@ -235,7 +235,13 @@ function sendQuery() {
   }
 }
 
-function sendChip(text) { start(text); }
+function sendChip(text) {
+  if (text === 'Termin vereinbaren') {
+    window.parent.postMessage({ action: "openWunschtermin" }, "*");
+    return;
+  }
+  start(text);
+}
 
 function sendMsg() {
   var input = document.getElementById("convo-input");
