@@ -208,6 +208,11 @@ function addQuickReplies(options) {
 function handleQuickReply(opt) {
   addUserMessage(opt);
   if (opt === "Kontakt") { showContactForm(); return; }
+  if (opt === "Termin vereinbaren") {
+    try { window.parent.postMessage({ action: "openWunschtermin" }, "*"); } catch(e) {}
+    addBotMessage("Ich öffne das Terminformular für Sie – dort können Sie Ihren Wunschtermin direkt anfragen!");
+    return;
+  }
   askAI(opt);
 }
 
