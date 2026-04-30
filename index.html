@@ -129,7 +129,7 @@ var chatOpen = false;
 var conversationHistory = [];
 var contactFormShown = false;
 
-var SYSTEM_PROMPT = "Du bist der freundliche KI-Assistent der Zahnarztpraxis 'Zahn\u00e4rzte auf der Holtenauer' in Kiel. Antworte stets auf Deutsch, herzlich und kompetent. Halte Antworten sehr kurz \u2013 maximal 2 S\u00e4tze. Auf dem Handy muss die Antwort ins Sichtfeld passen. Lieber k\u00fcrzer als l\u00e4nger. Stelle am Ende jeder Antwort eine kurze nat\u00fcrliche R\u00fcckfrage. Stelle keine Diagnosen. WICHTIG: Wenn du nicht sicher bist ob eine Leistung angeboten wird, verneine NIEMALS - verweise stattdessen freundlich auf die Praxis: 'Ruf uns an unter 0431 57667 oder schreib uns, wir helfen gerne weiter!' WICHTIG bei Kostenfragen: Sage NIEMALS, dass eine Behandlung komplett von der gesetzlichen Krankenkasse \u00fcbernommen wird. Bei GKV-Patienten k\u00f6nnen f\u00fcr hochwertige Materialien Zuzahlungen entstehen. Privat Versicherte haben in der Regel vollen Versicherungsschutz. Bei konkreten Kostenfragen empfehle einen individuellen Heil- und Kostenplan. Bei akuten Schmerzen weise auf die Notfallnummer hin: 0431 57667. Bei Begr\u00fc\u00dfung antworte IMMER mit: Willkommen bei den Zahn\u00e4rzten auf der Holtenauer! Sch\u00f6n, dass Sie da sind \u2013 wie kann ich Ihnen helfen?\n\n--- PRAXISINFOS ---\nAdresse: Holtenauer Stra\u00dfe 68, 24105 Kiel. Telefon: 0431 57667. Email: praxis@zahnarzt-holtenauer.de.\n\u00d6ffnungszeiten: Mo 08-18, Di 08-18, Mi 08-14, Do 08-18, Fr 08-13 Uhr. Flexible Termine f\u00fcr Berufst\u00e4tige m\u00f6glich.\nTeam: Dr. Dominik Hunold (Inhaber), Dr. Liane Kruse, An\u00e4sthesist Detlev Stolle.\nLeistungen: Zahnerhalt und Prophylaxe, Aligner/Invisalign (kostenlose Ersteinsch\u00e4tzung), Implantate, Parodontitis-Behandlung, Kronen und Br\u00fccken, Bleaching, Veneers, Angstpatienten-Betreuung mit D\u00e4mmerschlaf, Schnarchschienen, Sportmundschutz, Zahnfleischbehandlung, \u00e4sthetische Zahnbehandlungen, zahnfarbene Keramikf\u00fcllungen.\nAnfahrt: Parkplatz Schlemmermarkt Freund direkt hinter der Praxis. Bus: Haltestelle Schauenburgerstra\u00dfe, Linien 11, 60s, 62, 501/502, 900/901.\nService: Ratenzahlung \u00fcber PVS (kostenlos bis 6 Monate).";
+var SYSTEM_PROMPT = "Du bist der freundliche KI-Assistent der Zahnarztpraxis 'Zahnärzte auf der Holtenauer' in Kiel. Antworte stets auf Deutsch, herzlich und kompetent. Halte Antworten sehr kurz – maximal 2 Sätze. Auf dem Handy muss die Antwort ins Sichtfeld passen. Lieber kürzer als länger. Stelle am Ende jeder Antwort eine kurze natürliche Rückfrage. Stelle keine Diagnosen. WICHTIG: Wenn du nicht sicher bist ob eine Leistung angeboten wird, verneine NIEMALS - verweise stattdessen freundlich auf die Praxis: 'Ruf uns an unter 0431 57667 oder schreib uns, wir helfen gerne weiter!' WICHTIG bei Kostenfragen: Sage NIEMALS, dass eine Behandlung komplett von der gesetzlichen Krankenkasse übernommen wird. Bei GKV-Patienten können für hochwertige Materialien Zuzahlungen entstehen. Privat Versicherte haben in der Regel vollen Versicherungsschutz. Bei konkreten Kostenfragen empfehle einen individuellen Heil- und Kostenplan. Bei akuten Schmerzen weise auf die Notfallnummer hin: 0431 57667. Bei Begrüßung antworte IMMER mit: Willkommen bei den Zahnärzten auf der Holtenauer! Schön, dass Sie da sind – wie kann ich Ihnen helfen?\n\n--- PRAXISINFOS ---\nAdresse: Holtenauer Straße 68, 24105 Kiel. Telefon: 0431 57667. Email: praxis@zahnarzt-holtenauer.de.\nÖffnungszeiten: Mo 08-18, Di 08-18, Mi 08-14, Do 08-18, Fr 08-13 Uhr. Flexible Termine für Berufstätige möglich.\nTeam: Dr. Dominik Hunold (Inhaber), Dr. Liane Kruse, Anästhesist Detlev Stolle.\nLeistungen: Zahnerhalt und Prophylaxe, Aligner/Invisalign (kostenlose Ersteinschätzung), Implantate, Parodontitis-Behandlung, Kronen und Brücken, Bleaching, Veneers, Angstpatienten-Betreuung mit Dämmerschlaf, Schnarchschienen, Sportmundschutz, Zahnfleischbehandlung, ästhetische Zahnbehandlungen, zahnfarbene Keramikfüllungen.\nAnfahrt: Parkplatz Schlemmermarkt Freund direkt hinter der Praxis. Bus: Haltestelle Schauenburgerstraße, Linien 11, 60s, 62, 501/502, 900/901.\nService: Ratenzahlung über PVS (kostenlos bis 6 Monate).";
 
 async function fetchWeather() {
   if (weatherCache) return weatherCache;
@@ -137,13 +137,13 @@ async function fetchWeather() {
     var resp = await fetch("https://api.open-meteo.com/v1/forecast?latitude=54.3233&longitude=10.1228&current=temperature_2m,precipitation,weathercode,windspeed_10m,apparent_temperature&timezone=Europe%2FBerlin&forecast_days=1");
     var data = await resp.json();
     var c = data.current;
-    var codes = {0:"klar",1:"meist klar",2:"teilweise bew\u00f6lkt",3:"bew\u00f6lkt",45:"neblig",51:"leichter Nieselregen",61:"leichter Regen",63:"Regen",65:"starker Regen",71:"leichter Schneefall",73:"Schneefall",80:"Regenschauer",95:"Gewitter"};
+    var codes = {0:"klar",1:"meist klar",2:"teilweise bewölkt",3:"bewölkt",45:"neblig",51:"leichter Nieselregen",61:"leichter Regen",63:"Regen",65:"starker Regen",71:"leichter Schneefall",73:"Schneefall",80:"Regenschauer",95:"Gewitter"};
     var desc = codes[c.weathercode] || "wechselhaft";
     var glatt = c.weathercode >= 71 && c.weathercode <= 77;
     var regen = (c.weathercode >= 51 && c.weathercode <= 67) || (c.weathercode >= 80 && c.weathercode <= 82);
     var wind = c.windspeed_10m > 30;
-    var hinweis = glatt ? "Achtung Gl\u00e4tte! Bitte Bus nutzen." : regen ? "Es regnet. Fahrrad oder Bus nutzen." : wind ? "Starker Wind, Fahrrad nicht empfohlen." : "Gute Bedingungen f\u00fcr die Anfahrt.";
-    weatherCache = "[WETTER KIEL: " + desc + ", " + Math.round(c.temperature_2m) + "\u00b0C, Wind " + Math.round(c.windspeed_10m) + " km/h. " + hinweis + "]";
+    var hinweis = glatt ? "Achtung Glätte! Bitte Bus nutzen." : regen ? "Es regnet. Fahrrad oder Bus nutzen." : wind ? "Starker Wind, Fahrrad nicht empfohlen." : "Gute Bedingungen für die Anfahrt.";
+    weatherCache = "[WETTER KIEL: " + desc + ", " + Math.round(c.temperature_2m) + "°C, Wind " + Math.round(c.windspeed_10m) + " km/h. " + hinweis + "]";
     return weatherCache;
   } catch(e) { return null; }
 }
@@ -167,7 +167,7 @@ function toggleChat() {
 }
 
 function showWelcome() {
-  addBotMessage("Willkommen bei den Zahn\u00e4rzten auf der Holtenauer! Sch\u00f6n, dass Sie da sind \u2013 wie kann ich Ihnen helfen?");
+  addBotMessage("Willkommen bei den Zahnärzten auf der Holtenauer! Schön, dass Sie da sind – wie kann ich Ihnen helfen?");
   setTimeout(function() {
     addQuickReplies(["Termin vereinbaren", "Anfahrt & Parken", "Implantate", "Aligner", "Angstpatient", "Kontakt"]);
   }, 300);
@@ -207,7 +207,7 @@ function handleQuickReply(opt) {
   addUserMessage(opt);
   if (opt === "Kontakt") { showContactForm(); return; }
   if (opt === "Termin vereinbaren") {
-    addBotMessage("Ich \u00f6ffne das Terminformular f\u00fcr Sie \u2013 dort k\u00f6nnen Sie Ihren Wunschtermin direkt anfragen!");
+    addBotMessage("Ich öffne das Terminformular für Sie – dort können Sie Ihren Wunschtermin direkt anfragen!");
     try { window.parent.postMessage({ action: "openWunschtermin" }, "*"); } catch(e) {}
     return;
   }
@@ -224,7 +224,7 @@ function showTyping() {
 
 function removeTyping() { var el = document.getElementById("typing-indicator"); if (el) el.remove(); }
 
-var weatherKW = ["wetter","fahrrad","anfahrt","parken","parkplatz","bus","gl\u00e4tte","glatt","regen","schnee","wind","anreise","eis"];
+var weatherKW = ["wetter","fahrrad","anfahrt","parken","parkplatz","bus","glätte","glatt","regen","schnee","wind","anreise","eis"];
 
 async function askAI(userText) {
   conversationHistory.push({ role: "user", content: userText });
@@ -233,7 +233,7 @@ async function askAI(userText) {
   for (var i = 0; i < contactKW.length; i++) {
     if (userText.toLowerCase().indexOf(contactKW[i]) !== -1 && !contactFormShown) {
       removeTyping();
-      addBotMessage("Gerne helfe ich Ihnen einen Termin zu vereinbaren! F\u00fcllen Sie das Kontaktformular aus und wir melden uns schnellstm\u00f6glich bei Ihnen.");
+      addBotMessage("Gerne helfe ich Ihnen einen Termin zu vereinbaren! Füllen Sie das Kontaktformular aus und wir melden uns schnellstmöglich bei Ihnen.");
       setTimeout(showContactForm, 350);
       return;
     }
@@ -289,8 +289,8 @@ function submitContact(btn) {
   var email = document.getElementById("cf-email").value.trim();
   var msg = document.getElementById("cf-msg").value.trim();
   var dsgvo = document.getElementById("cf-dsgvo").checked;
-  if (!name || (!tel && !email)) { btn.textContent = "Bitte Name und Kontakt ausf\u00fcllen"; setTimeout(function() { btn.textContent = "Absenden"; }, 2000); return; }
-  if (!dsgvo) { btn.textContent = "Bitte Datenschutz best\u00e4tigen"; setTimeout(function() { btn.textContent = "Absenden"; }, 2000); return; }
+  if (!name || (!tel && !email)) { btn.textContent = "Bitte Name und Kontakt ausfüllen"; setTimeout(function() { btn.textContent = "Absenden"; }, 2000); return; }
+  if (!dsgvo) { btn.textContent = "Bitte Datenschutz bestätigen"; setTimeout(function() { btn.textContent = "Absenden"; }, 2000); return; }
   btn.textContent = "Wird gesendet..."; btn.disabled = true;
   fetch("https://api.web3forms.com/submit", {
     method: "POST",
@@ -302,7 +302,7 @@ function submitContact(btn) {
     document.getElementById("contact-form-inner").innerHTML =
       '<div style="text-align:center;padding:10px 0"><div style="font-size:22px;margin-bottom:8px;color:#52B788">&#10003;</div>' +
       '<div style="font-size:13px;font-weight:500;color:#1A1A1A">Vielen Dank, ' + name + '!</div>' +
-      '<div style="font-size:12px;color:#8A8A85;margin-top:4px">Wir melden uns so schnell wie m\u00f6glich bei Ihnen.</div></div>';
+      '<div style="font-size:12px;color:#8A8A85;margin-top:4px">Wir melden uns so schnell wie möglich bei Ihnen.</div></div>';
     scrollBottom();
   })
   .catch(function() { btn.textContent = "Fehler - bitte erneut versuchen"; btn.disabled = false; });
@@ -317,6 +317,13 @@ function handleKey(e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault
 function autoResize(el) { el.style.height = "auto"; el.style.height = Math.min(el.scrollHeight, 80) + "px"; }
 function scrollBottom() { var c = document.getElementById("chat-messages"); setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50); }
 function getTime() { return new Date().toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" }); }
+
+// Listener für Jimdo-Button (postMessage von außen)
+window.addEventListener("message", function(e) {
+  if (e.data && e.data.action === "open" && !chatOpen) {
+    toggleChat();
+  }
+});
 </script>
 </body>
 </html>
