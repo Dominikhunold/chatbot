@@ -130,7 +130,6 @@ body { background: transparent; font-family: 'Open Sans', sans-serif; font-size:
   </div>
 
   <div class="chips" id="chips">
-
     <span class="chip" onclick="sendChip('Was sind die Öffnungszeiten?')">Öffnungszeiten</span>
     <span class="chip" onclick="sendChip('Implantate')">Implantate</span>
     <span class="chip" onclick="sendChip('Aligner')">Aligner</span>
@@ -139,6 +138,9 @@ body { background: transparent; font-family: 'Open Sans', sans-serif; font-size:
   </div>
 
   <div class="convo" id="convo"></div>
+  <div id="close-convo" style="display:none;width:100%;max-width:600px;text-align:right;margin-top:4px;">
+    <button onclick="closeConvo()" style="background:none;border:none;color:#bbb;font-size:12px;cursor:pointer;font-family:'Open Sans',sans-serif;padding:4px 8px;border-radius:6px;">✕ Gespräch schließen</button>
+  </div>
 
   <div class="input-row" id="input-row">
     <textarea id="convo-input" class="convo-input" rows="1" placeholder="Ihre Nachricht ..." onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
@@ -167,9 +169,23 @@ function start(text) {
     document.getElementById("convo").classList.add("open");
     document.getElementById("input-row").classList.add("visible");
     document.getElementById("disclaimer").classList.add("visible");
+    document.getElementById("close-convo").style.display = "block";
   }
   resize();
   if (text) { addUser(text); ask(text); }
+}
+
+function closeConvo() {
+  started = false;
+  chatHistory = [];
+  document.getElementById("convo").innerHTML = "";
+  document.getElementById("convo").classList.remove("open");
+  document.getElementById("input-row").classList.remove("visible");
+  document.getElementById("disclaimer").classList.remove("visible");
+  document.getElementById("close-convo").style.display = "none";
+  document.getElementById("chips").style.display = "flex";
+  document.getElementById("search-input").value = "";
+  resize();
 }
 
 function addBot(text) {
