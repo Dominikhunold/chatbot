@@ -1,0 +1,33 @@
+name: Deploy to Hetzner
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy via rsync over SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.HETZNER_SSH_KEY }}
+          SERVER_HOST: ${{ secrets.HETZNER_HOST }}
+          SERVER_USER: root
+          DEPLOY_PATH: /var/www/html
+        run: |
+          # SSH-Key einrichten
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
+
+          # Dateien auf Server synchronisieren
+          rsync -avz --delete \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            ./ root@$SERVER_HOST:$DEPLOY_PATH/
